@@ -72,7 +72,7 @@ const AccountSettings: React.FC<AccountSettingsProps> = ({
             isLoading(true)
 
             /* FETCH */
-            // const response = await fetch(`http://localhost:3000/users/${user.id}`, {
+            // const response = await fetch(`${import.meta.env.VITE_API_URL}/users/${user.id}`, {
             //     method: 'PUT',
             //     headers: {
             //         'Content-Type': 'application/json'
@@ -87,7 +87,7 @@ const AccountSettings: React.FC<AccountSettingsProps> = ({
 
             /* AXIOS */
             const response = await axios.put(
-                `http://localhost:3000/users/${user.id}`,
+                `${import.meta.env.VITE_API_URL}/users/${user.id}`,
                 data,
                 { headers: { 'Content-Type': 'application/json' }, withCredentials: true }
             )

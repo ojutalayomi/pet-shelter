@@ -113,7 +113,7 @@ const InviteComponent = ({ className }: { className?: string }) => {
         }
 
         /* FETCH */
-        // const response = await fetch('http://localhost:3000/users', {
+        // const response = await fetch(import.meta.env.VITE_API_URL+'/users', {
         //     method: 'POST',
         //     headers: {
         //         'Content-Type': 'application/json'
@@ -128,7 +128,7 @@ const InviteComponent = ({ className }: { className?: string }) => {
 
         /* AXIOS */
         const response = await axios.post(
-            'http://localhost:3000/users',
+            import.meta.env.VITE_API_URL+'/users',
             userData,
             { 
               headers: { 
@@ -242,7 +242,7 @@ const InviteComponent = ({ className }: { className?: string }) => {
                 setIsLoading(true)
                 try {
                   const response = await axios.put(
-                    `http://localhost:3000/users/${user.id}`,
+                    `${import.meta.env.VITE_API_URL}/users/${user.id}`,
                     { role: 'admin' },
                     { headers: { 
                       'Content-Type': 'application/json',

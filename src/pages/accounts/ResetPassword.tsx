@@ -37,7 +37,7 @@ export default function ResetPassword() {
             }
 
             /* FETCH */
-            // const response = await fetch(`http://localhost:3000/users/reset-password/${token}`, {
+            // const response = await fetch(`${import.meta.env.VITE_API_URL}/users/reset-password/${token}`, {
             //     method: 'POST',
             //     headers: {
             //         'Content-Type': 'application/json'
@@ -52,7 +52,7 @@ export default function ResetPassword() {
 
             /* AXIOS */
             const response = await axios.post(
-                `http://localhost:3000/users/reset-password/${token}`,
+                `${import.meta.env.VITE_API_URL}/users/reset-password/${token}`,
                 userData,
                 { headers: { 'Content-Type': 'application/json' } }
             )

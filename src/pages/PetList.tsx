@@ -27,12 +27,12 @@ function PetList({ filter }: { filter?: PetStatus }) {
     // const getPets = async () => {
     //     try {
     //         /* FETCH */
-    //         // const response = await fetch('http://localhost:3000/pets')
+    //         // const response = await fetch(import.meta.env.VITE_API_URL+'/pets')
     //         // const data = await response.json()
     //         // if (response.status === 200) setPets(data)
 
     //         /* AXIOS */
-    //         const response = await axios.get('http://localhost:3000/pets')
+    //         const response = await axios.get(import.meta.env.VITE_API_URL+'/pets')
     //         if (response.status === 200) setPets(response.data)
 
     //     } catch (error) {

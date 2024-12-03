@@ -43,14 +43,14 @@ const PetDetail = () => {
     // const getPet = useCallback(async () => {
     //     try {
     //         /* FETCH */
-    //         // const response = await fetch(`http://localhost:3000/pets/${petId}`)
+    //         // const response = await fetch(`${import.meta.env.VITE_API_URL}/pets/${petId}`)
     //         // const data = await response.json()
     //         // if (response.status === 200) {
     //         //     setPet(data)
     //         // }
 
     //         /* AXIOS */
-    //         const response = await axios.get(`http://localhost:3000/pets/${petId}`)
+    //         const response = await axios.get(`${import.meta.env.VITE_API_URL}/pets/${petId}`)
     //         if (response.status === 200) {
     //             setPet(response.data)
     //         }
@@ -65,12 +65,12 @@ const PetDetail = () => {
     const deletePet_ = async () => {
         try {
             /* FETCH */
-            // const response = await fetch(`http://localhost:3000/pets/${petId}`, {
+            // const response = await fetch(`${import.meta.env.VITE_API_URL}/pets/${petId}`, {
             //     method: 'DELETE'
             // })
 
             /* AXIOS */
-            const response = await axios.delete(`http://localhost:3000/pets/${petId}`)
+            const response = await axios.delete(`${import.meta.env.VITE_API_URL}/pets/${petId}`)
 
             if (response.status === 200) {
                 if (petId) dispatch(deletePet(petId))

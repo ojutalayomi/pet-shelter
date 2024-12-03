@@ -56,7 +56,7 @@ export default function ConfirmEmail() {
     const fetchEmailConfirmationCode = useCallback(async () => {
         try {
             const response = await axios.post(
-                'http://localhost:3000/users/confirm-email',
+                import.meta.env.VITE_API_URL+'/users/confirm-email',
                 { code: true, email: email },
                 { headers: { 'Content-Type': 'application/json' } }
             );
@@ -95,7 +95,7 @@ export default function ConfirmEmail() {
             }
 
             /* FETCH */
-            // const response = await fetch('http://localhost:3000/users/confirm-email', {
+            // const response = await fetch(import.meta.env.VITE_API_URL+'/users/confirm-email', {
             //     method: 'POST',
             //     headers: {
             //         'Content-Type': 'application/json'
@@ -110,7 +110,7 @@ export default function ConfirmEmail() {
 
             /* AXIOS */
             const response = await axios.post(
-                'http://localhost:3000/users/confirm-email',
+                import.meta.env.VITE_API_URL+'/users/confirm-email',
                 userData,
                 { headers: { 'Content-Type': 'application/json' } }
             )

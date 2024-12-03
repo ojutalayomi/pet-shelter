@@ -82,7 +82,7 @@ export default function SignIn() {
             }
 
             /* FETCH */
-            // const response = await fetch('http://localhost:3000/users/signin', {
+            // const response = await fetch(import.meta.env.VITE_API_URL+'/users/signin', {
             //     method: 'POST',
             //     headers: {
             //         'Content-Type': 'application/json'
@@ -97,7 +97,7 @@ export default function SignIn() {
 
             /* AXIOS */
             const response = await axios.post(
-                'http://localhost:3000/users/signin',
+                import.meta.env.VITE_API_URL+'/users/signin',
                 userData,
                 { headers: { 'Content-Type': 'application/json' } }
             )

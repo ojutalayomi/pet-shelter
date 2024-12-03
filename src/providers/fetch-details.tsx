@@ -12,7 +12,7 @@ import { RootState } from '@/redux/store'
 import { User } from '@/types/type'
 
 const api = axios.create({
-  baseURL: 'http://localhost:3000',
+  baseURL: import.meta.env.VITE_API_URL,
   withCredentials: true, // Important for sending cookies
   headers: {
     'Content-Type': 'application/json',
@@ -140,7 +140,7 @@ const FetchDetailsProvider: React.FC<{children: React.ReactNode}> = ({ children 
       setIsLoading(prev => ({ ...prev, applications: true }))
       setError(prev => ({ ...prev, applications: null }))
       try {
-        const response = await axios.get('http://localhost:3000/pets/adoption-applications',
+        const response = await axios.get(import.meta.env.VITE_API_URL+'/pets/adoption-applications',
           {
             ...(userRole !== 'user' ? {
               headers: { 

@@ -17,7 +17,6 @@ const Applications = lazy(() => import ('@/pages/admin/Applications'))
 const Invite = lazy(() => import ('@/pages/admin/Invite'))
 const Dashboard = lazy(() => import ('@/pages/admin/Dashboard'))
 
-const HomePage = lazy(() => import ('@/pages/HomePage'))
 const PetList = lazy(() => import ('@/pages/PetList'))
 const EmergencyCare = lazy(() => import ('@/pages/EmergencyCare'))
 const Settings = lazy(() => import ('@/pages/settings/Settings'))
@@ -25,10 +24,14 @@ const Permissions = lazy(() => import ('@/pages/settings/Permissions'))
 const Notifications = lazy(() => import ('@/pages/settings/Notifications'))
 const ShelterInfo = lazy(() => import ('@/pages/settings/ShelterInfo')) 
 const ScheduleVisit = lazy(() => import ('@/pages/ScheduleVisit'))
+
 const AdoptionCenter = lazy(() => import ('@/pages/AdoptionCenter'))
 const AdoptionProcess = lazy(() => import ('@/pages/AdoptionProcess'))
 const AdoptionApplication = lazy(() => import ('@/pages/AdoptionApplication'))
 const AdoptionApplicationList = lazy(() => import ('@/pages/AdoptionApplicationList'))
+const AdoptionApplicationDetail = lazy(() => import ('@/pages/AdoptionApplicationDetail'))
+const AdoptionApplicationDetailEdit = lazy(() => import ('@/pages/AdoptionApplicationDetailEdit'))
+
 const Analytics = lazy(() => import ('@/pages/Analytics'))
 const Menu = lazy(() => import ('@/pages/Menu'))
 const PetDetail = lazy(() => import ('@/pages/PetDetail'))
@@ -48,7 +51,6 @@ function Main() {
   return (
     <>
       <Routes location={backgroundLocation || location}>
-        <Route path='/' element={<Suspense fallback={<></>}><HomePage /></Suspense>}/>
 
         {/* Accounts */}
 
@@ -139,6 +141,10 @@ function Main() {
         <Route path='/adoption-applications' element={<Suspense fallback={<></>}><AdoptionApplicationList /></Suspense>}/>
 
         <Route path='/adoption-process/:petId' element={<Suspense fallback={<></>}><AdoptionApplication /></Suspense>}/>
+
+        <Route path='/adoption-applications/:petId' element={<Suspense fallback={<></>}><AdoptionApplicationDetail /></Suspense>}/>
+
+        <Route path='/adoption-applications/:petId/edit' element={<Suspense fallback={<></>}><AdoptionApplicationDetailEdit /></Suspense>}/>
 
         {/* Analytics */}
 

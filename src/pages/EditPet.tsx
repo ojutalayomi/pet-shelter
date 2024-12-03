@@ -108,7 +108,7 @@ const EditPet: React.FC = () => {
             }
 
             /* FETCH */
-            // const response = await fetch(`http://localhost:3000/pets/${petToEdit.id}`, {
+            // const response = await fetch(`${import.meta.env.VITE_API_URL}/pets/${petToEdit.id}`, {
             //     method: 'PUT',
             //     headers: {
             //         'Content-Type': 'application/json'
@@ -118,7 +118,7 @@ const EditPet: React.FC = () => {
 
             /* AXIOS */
             const response = await axios.put(
-                `http://localhost:3000/pets/${petToEdit.id}`,
+                `${import.meta.env.VITE_API_URL}/pets/${petToEdit.id}`,
                 petData,
                 { headers: { 'Content-Type': 'application/json' } }
             )

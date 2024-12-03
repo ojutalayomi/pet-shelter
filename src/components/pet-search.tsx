@@ -39,14 +39,14 @@ export function PetSearch() {
         return
       }
         /* FETCH */
-        // const response = await fetch('http://localhost:3000/pets/search?query='+search)
+        // const response = await fetch(import.meta.env.VITE_API_URL+'/pets/search?query='+search)
 
         // if (response.status === 200) {
         //     const data = await response.json()
         // }
 
         /* AXIOS */
-        const response = await axios.get(`http://localhost:3000/pets/search?query=${encodeURIComponent(search)}`)
+        const response = await axios.get(`${import.meta.env.VITE_API_URL}/pets/search?query=${encodeURIComponent(search)}`)
 
         if (response.status === 200) {
           setResults(response.data)

@@ -533,6 +533,7 @@ const AppSidebar: React.FC<{children: React.ReactNode}> = ({children}) => {
             !location.pathname.startsWith('/pet-management') &&
             !location.pathname.startsWith('/analytics') &&
             !location.pathname.startsWith('/admin') &&
+            !location.pathname.startsWith('/adoption-applications') &&
             location.pathname !== '/') && (
               <Carousel
                 plugins={[plugin.current]}
@@ -547,8 +548,9 @@ const AppSidebar: React.FC<{children: React.ReactNode}> = ({children}) => {
                 <CarouselContent className="-ml-1">
                   <CarouselItem className="pl-4 md:basis-1/2 lg:basis-1/3"><div className="aspect-video bg-[url('/paws.jpg')] bg-cover border rounded-xl shadow bg-muted/50" /></CarouselItem>
                   <CarouselItem className="pl-4 md:basis-1/2 lg:basis-1/3"><div className="aspect-video bg-[url('/kitten.jpg')] bg-cover border rounded-xl shadow bg-muted/50" /></CarouselItem>
-                  <CarouselItem className="pl-4 md:basis-1/2 lg:basis-1/3"><div className="aspect-video bg-[url('/cute-kitten.avif')] bg-cover border rounded-xl shadow bg-muted/50" /></CarouselItem>
-                  <CarouselItem className="pl-4 md:basis-1/2 lg:basis-1/3"><div className="aspect-video bg-[url('/cute-kitten.avif')] bg-cover border rounded-xl shadow bg-muted/50" /></CarouselItem>
+                  <CarouselItem className="pl-4 md:basis-1/2 lg:basis-1/3"><div className="aspect-video bg-[url('/dog-454145_1920.jpg')] bg-cover border rounded-xl shadow bg-muted/50" /></CarouselItem>
+                  <CarouselItem className="pl-4 md:basis-1/2 lg:basis-1/3"><div className="aspect-video bg-[url('/rabbit-8489271_1920.png')] bg-cover border rounded-xl shadow bg-muted/50" /></CarouselItem>
+                  <CarouselItem className="pl-4 md:basis-1/2 lg:basis-1/3"><div className="aspect-video bg-[url('/dog-2606759_1920.jpg')] bg-cover border rounded-xl shadow bg-muted/50" /></CarouselItem>
                 </CarouselContent>
               </Carousel>
           )}

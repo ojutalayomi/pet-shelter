@@ -95,7 +95,7 @@ const AddPet: React.FC = () => {
             }
 
             /* FETCH */
-            // const response = await fetch('http://localhost:3000/pets/', {
+            // const response = await fetch(import.meta.env.VITE_API_URL+'/pets/', {
             //     method: 'POST',
             //     headers: {
             //         'Content-Type': 'application/json'
@@ -110,7 +110,7 @@ const AddPet: React.FC = () => {
 
             /* AXIOS */
             const response = await axios.post(
-                'http://localhost:3000/pets/',
+                import.meta.env.VITE_API_URL+'/pets/',
                 petData,
                 { headers: { 'Content-Type': 'application/json' } }
             )

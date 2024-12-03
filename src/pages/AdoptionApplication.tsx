@@ -68,14 +68,14 @@ function AdoptionApplication() {
     // Handle form submission logic here
     try {
         /* FETCH */
-        // const response = await fetch(`http://localhost:3000/pets/adoption-application`)
+        // const response = await fetch(`${import.meta.env.VITE_API_URL}/pets/adoption-application`)
         // const data = await response.json()
         // if (response.status === 200) {
         //     setPet(data)
         // }
 
         /* AXIOS */
-        const response = await axios.post(`http://localhost:3000/pets/adoption-application`, 
+        const response = await axios.post(`${import.meta.env.VITE_API_URL}/pets/adoption-application`, 
           formData, {
             withCredentials: true
           })

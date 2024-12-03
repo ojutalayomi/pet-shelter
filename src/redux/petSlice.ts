@@ -96,6 +96,8 @@ const petSlice = createSlice({
         if (index !== -1) {
           state.adoptionApplicationList.applications[index] = { ...state.adoptionApplicationList.applications[index], ...updates };
         }
+      } else {
+        state.adoptionApplicationList.applications = [...state.adoptionApplicationList.applications.filter(application => application._id !== id), updates as AdoptionApplication]
       }
     },
     deleteAdoptionApplication: (state, action: PayloadAction<string>) => {
@@ -111,6 +113,8 @@ const petSlice = createSlice({
         if (index !== -1) {
           state.adoptionApplicationListForAdmin.applications[index] = { ...state.adoptionApplicationListForAdmin.applications[index], ...updates };
         }
+      } else {
+        state.adoptionApplicationListForAdmin.applications = [...state.adoptionApplicationListForAdmin.applications.filter(application => application._id !== id), updates as AdoptionApplicationDetailsForAdmin]
       }
     },
     deleteAdoptionApplicationForAdmin: (state, action: PayloadAction<string>) => {

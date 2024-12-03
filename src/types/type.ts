@@ -1,12 +1,6 @@
 import * as z from 'zod';
 
-export interface AdoptionApplication {
-  _id: string
-  petId: string
-  status: string
-  createdAt: string
-  petName: string
-}
+export type AdoptionApplication = AdoptionApplicationDetailsForAdmin
 
 export interface AdoptionApplicationDetailsForAdmin {
   _id: string;
@@ -33,7 +27,8 @@ export interface AdoptionApplicationDetailsForAdmin {
   references: string;
   createdAt: string;
   updatedAt: string;
-  status: 'pending' | 'approved' | 'rejected';
+  status: 'pending' | 'approved' | 'rejected' | 'needs more info';
+  notes: string;
 }
 
 export interface PetProfile_ { 
@@ -60,6 +55,7 @@ export interface PetProfile {
       neutered: boolean;
       lastCheckup: string;
     };
+    notes: string;
 }
 
 export interface User {

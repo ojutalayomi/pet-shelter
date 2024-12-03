@@ -25,9 +25,11 @@ import { PetProfile } from "@/types/type"
 // import { Card, CardContent, CardHeader } from "./ui/card"
 import { Input } from "./ui/input"
 import { Separator } from "./ui/separator"
+import { useNetwork } from "@/providers/useNetwork"
 
 export function CommandDialogHome({ onSelect }: { onSelect?: (pet: PetProfile) => void }) {
   const navigate = useNavigate()
+  const { isOnline } = useNetwork()
   const [open, setOpen] = useState(false)
   const [search, setSearch] = useState("")
   const [results, setResults] = useState<PetProfile[] | null>(null)
@@ -39,14 +41,14 @@ export function CommandDialogHome({ onSelect }: { onSelect?: (pet: PetProfile) =
         return
       }
         /* FETCH */
-        // const response = await fetch('http://localhost:3000/pets/search?query='+search)
+        // const response = await fetch(import.meta.env.VITE_API_URL+'/pets/search?query='+search)
 
         // if (response.status === 200) {
         //     const data = await response.json()
         // }
 
         /* AXIOS */
-        const response = await axios.get(`http://localhost:3000/pets/search?query=${encodeURIComponent(search)}`)
+        const response = await axios.get(`${import.meta.env.VITE_API_URL}/pets/search?query=${encodeURIComponent(search)}`)
 
         if (response.status === 200) {
           setResults(response.data)
@@ -105,7 +107,7 @@ export function CommandDialogHome({ onSelect }: { onSelect?: (pet: PetProfile) =
               Search for pets by name, breed, or type...
             </Button>
         </DialogTrigger>
-        <DialogContent className="w-[var(--radix-popover-trigger-width)]">
+        <DialogContent>
           <DialogHeader>
             <DialogTitle>Search for pets</DialogTitle>
             <DialogDescription>
@@ -113,6 +115,7 @@ export function CommandDialogHome({ onSelect }: { onSelect?: (pet: PetProfile) =
             </DialogDescription>
           </DialogHeader>
             <Input
+                disabled={!isOnline}
                 placeholder="Search for pets by name, breed, or type..."
                 value={search}
                 onChange={(e) => setSearch(e.target.value)}

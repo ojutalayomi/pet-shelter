@@ -80,7 +80,7 @@ const SignUp = () => {
         }
 
         /* FETCH */
-        // const response = await fetch('http://localhost:3000/users', {
+        // const response = await fetch(import.meta.env.VITE_API_URL+'/users', {
         //     method: 'POST',
         //     headers: {
         //         'Content-Type': 'application/json'
@@ -95,7 +95,7 @@ const SignUp = () => {
 
         /* AXIOS */
         const response = await axios.post(
-            'http://localhost:3000/users',
+            import.meta.env.VITE_API_URL+'/users',
             userData,
             { headers: { 'Content-Type': 'application/json' } }
         )
