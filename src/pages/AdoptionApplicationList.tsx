@@ -62,7 +62,7 @@ function AdoptionApplicationList() {
                         Submitted: {timeInstance.formatMoment(application.createdAt)}
                       </p>
                       <p className="text-sm">
-                        Status: <span className={`${application.status === 'pending' ? 'text-gray-500' : application.status === 'rejected' ? 'text-red-500' : 'text-green-500'}`}>{application.status.charAt(0).toUpperCase() + application.status.slice(1)}</span>
+                        Status: <span className={`${application.status === 'pending' ? 'text-yellow-500' : application.status === 'rejected' ? 'text-red-500' : application.status === 'approved' ? 'text-green-500' : 'text-gray-500'}`}>{application.status.charAt(0).toUpperCase() + application.status.slice(1)}</span>
                       </p>
                     </div>
                     <Link to={application.status === 'pending' ? `#` : `/adoption-applications/${application.petId}`}>

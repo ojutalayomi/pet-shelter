@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useRef } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '@/redux/store';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
@@ -8,7 +8,7 @@ import { Button } from '@/components/ui/button';
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger, DialogClose } from '@/components/ui/dialog';
 import { Label } from '@/components/ui/label';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
-import { BadgeAlert, BadgeCheck, BadgeHelp, InboxIcon, Download } from 'lucide-react';
+import { BadgeAlert, BadgeCheck, BadgeHelp, InboxIcon, Download, Loader2 } from 'lucide-react';
 import { Time } from '@/lib/utils';
 import { AdoptionApplicationDetailsForAdmin } from '@/types/type';
 import axios, { AxiosError } from 'axios';
@@ -16,6 +16,7 @@ import { toast } from '@/hooks/use-toast';
 import { updateAdoptionApplicationForAdmin } from '@/redux/petSlice';
 import { Textarea } from '@/components/ui/textarea';
 import jsPDF from 'jspdf';
+import html2canvas from 'html2canvas';
 
 const timeInstance = new Time();
 
@@ -24,70 +25,107 @@ const Applications = () => {
   const pets = useSelector((state: RootState) => state.pet.petData.pets);
   const [page, setPage] = useState(1);
   const itemsPerPage = pagination.itemsPerPage;
+  const [isLoading, setIsLoading] = useState(false);
+  const applicationRef = useRef<HTMLDivElement>(null);
 
   const generatePDF = async (application: AdoptionApplicationDetailsForAdmin) => {
-    const pdf = new jsPDF('p', 'mm', 'a4');
-    const pet = pets.find(pet => pet.id === application.petId);
-
-    // PDF Content
-    pdf.setFontSize(20);
-    pdf.text('Adoption Application Details', 20, 20);
+    setIsLoading(true);
+    // Create a temporary div to render the content
+    const printElement = document.createElement('div');
+    printElement.className = 'pdf-content p-8';
     
-    pdf.setFontSize(12);
-    // Applicant Details
-    pdf.text('Applicant Information', 20, 35);
-    pdf.setFontSize(10);
-    pdf.text(`Name: ${application.firstName} ${application.lastName}`, 20, 45);
-    pdf.text(`Email: ${application.email}`, 20, 52);
-    pdf.text(`Phone: ${application.phone}`, 20, 59);
-    pdf.text(`Address: ${application.address}, ${application.city}, ${application.state} ${application.zip}`, 20, 66);
-    
-    // Pet Details
-    pdf.setFontSize(12);
-    pdf.text('Pet Information', 20, 80);
-    pdf.setFontSize(10);
-    if (pet) {
-      pdf.text(`Name: ${pet.name}`, 20, 90);
-      pdf.text(`Type: ${pet.type}`, 20, 97);
-      pdf.text(`Breed: ${pet.breed}`, 20, 104);
-      pdf.text(`Age: ${pet.age} year(s)`, 20, 111);
-    } else {
-      pdf.text(`Pet ID: ${application.petId}`, 20, 90);
+    // Add your styled HTML content
+    printElement.innerHTML = `
+      <div class="space-y-6">
+        <div class="text-center mb-8">
+          <h1 class="text-2xl font-bold">Adoption Application Details</h1>
+          <p class="text-sm text-gray-500">Application ID: ${application._id}</p>
+          <p class="text-sm text-gray-500">Generated on ${new Date().toLocaleString()}</p>
+        </div>
+
+        <div class="space-y-4">
+          <h2 class="text-xl font-semibold">Applicant Information</h2>
+          <div class="grid grid-cols-2 gap-4">
+            <p><span class="font-medium">Name:</span> ${application.firstName} ${application.lastName}</p>
+            <p><span class="font-medium">Email:</span> ${application.email}</p>
+            <p><span class="font-medium">Phone:</span> ${application.phone}</p>
+            <p><span class="font-medium">Address:</span> ${application.address}, ${application.city}, ${application.state} ${application.zip}</p>
+          </div>
+        </div>
+
+        <div class="space-y-4">
+          <h2 class="text-xl font-semibold">Pet Information</h2>
+          <div class="grid grid-cols-2 gap-4">
+            ${(() => {
+              const pet = pets.find(p => p.id === application.petId);
+              return pet ? `
+                <p><span class="font-medium">Name:</span> ${pet.name}</p>
+                <p><span class="font-medium">Pet ID:</span> ${pet.id}</p>
+                <p><span class="font-medium">Type:</span> ${pet.type}</p>
+                <p><span class="font-medium">Breed:</span> ${pet.breed}</p>
+                <p><span class="font-medium">Age:</span> ${pet.age} year(s)</p>
+              ` : `<p><span class="font-medium">Pet ID:</span> ${application.petId}</p>`;
+            })()}
+          </div>
+        </div>
+
+        <div class="space-y-4">
+          <h2 class="text-xl font-semibold">Housing Information</h2>
+          <div class="grid grid-cols-2 gap-4">
+            <p><span class="font-medium">Housing Type:</span> ${application.housing}</p>
+            <p><span class="font-medium">Own/Rent:</span> ${application.ownRent}</p>
+            ${application.landlordContact ? `<p><span class="font-medium">Landlord Contact:</span> ${application.landlordContact}</p>` : ''}
+          </div>
+        </div>
+
+        ${application.notes ? `
+          <div class="space-y-4">
+            <h2 class="text-xl font-semibold">Notes</h2>
+            <p class="whitespace-pre-wrap">${application.notes}</p>
+          </div>
+        ` : ''}
+
+        <div class="mt-8 pt-4 border-t">
+          <p class="text-sm text-gray-500">Application Status: ${application.status}</p>
+          <p class="text-sm text-gray-500">Submitted: ${timeInstance.formatMoment(application.createdAt)}</p>
+          <p class="text-sm text-gray-500">Last Updated: ${timeInstance.formatMoment(application.updatedAt)}</p>
+        </div>
+      </div>
+    `;
+
+    // Append to document temporarily
+    document.body.appendChild(printElement);
+
+    try {
+      // Convert HTML to canvas
+      const canvas = await html2canvas(printElement, {
+        scale: 2, // Higher quality
+        useCORS: true,
+        logging: false
+      });
+
+      // Create PDF
+      const pdf = new jsPDF('p', 'mm', 'a4');
+      const imgWidth = 210; // A4 width in mm
+      const imgHeight = (canvas.height * imgWidth) / canvas.width;
+      
+      // Add the image to PDF
+      pdf.addImage(
+        canvas.toDataURL('image/png'),
+        'PNG',
+        0,
+        0,
+        imgWidth,
+        imgHeight
+      );
+
+      // Save the PDF
+      pdf.save(`adoption-application-${application.firstName}-${application.lastName}.pdf`);
+    } finally {
+      // Clean up
+      document.body.removeChild(printElement);
+      setIsLoading(false);
     }
-
-    // Housing Information
-    pdf.setFontSize(12);
-    pdf.text('Housing Information', 20, 125);
-    pdf.setFontSize(10);
-    pdf.text(`Housing Type: ${application.housing}`, 20, 135);
-    pdf.text(`Own/Rent: ${application.ownRent}`, 20, 142);
-    if (application.landlordContact) {
-      pdf.text(`Landlord Contact: ${application.landlordContact}`, 20, 149);
-    }
-
-    // Application Status
-    pdf.setFontSize(12);
-    pdf.text('Application Status', 20, 165);
-    pdf.setFontSize(10);
-    pdf.text(`Status: ${application.status}`, 20, 175);
-    pdf.text(`Submitted: ${timeInstance.formatMoment(application.createdAt)}`, 20, 182);
-    pdf.text(`Last Updated: ${timeInstance.formatMoment(application.updatedAt)}`, 20, 189);
-
-    // Notes
-    if (application.notes) {
-      pdf.setFontSize(12);
-      pdf.text('Notes', 20, 205);
-      pdf.setFontSize(10);
-      const splitNotes = pdf.splitTextToSize(application.notes, 170);
-      pdf.text(splitNotes, 20, 215);
-    }
-
-    // Footer
-    pdf.setFontSize(8);
-    pdf.text(`Generated on ${new Date().toLocaleString()}`, 20, 287);
-
-    // Save the PDF
-    pdf.save(`adoption-application-${application.firstName}-${application.lastName}.pdf`);
   };
 
   return (
@@ -115,11 +153,12 @@ const Applications = () => {
                   .map((application) => (
                     <div 
                       key={application._id} 
+                      ref={applicationRef}
                       className="flex flex-col gap-4 rounded-lg border p-4 transition-colors hover:bg-muted/50"
                     >
                       <div className="flex flex-wrap items-center gap-4">
-                        <Avatar className="border p-2 rounded-full">
-                          <AvatarFallback>
+                        <Avatar className="border p-1 rounded-full">
+                          <AvatarFallback className="p-1">
                             {application.firstName[0]}{application.lastName[0]}
                           </AvatarFallback>
                         </Avatar>
@@ -138,10 +177,11 @@ const Applications = () => {
                                 {
                                   application.status === 'rejected' ? <BadgeAlert className="h-6 w-6 text-red-500"/> :
                                   application.status === 'approved' ? <BadgeCheck className="h-6 w-6 text-green-500"/> :
+                                  application.status === 'needs more info' ? <BadgeHelp className="h-6 w-6 text-yellow-500"/> :
                                   <BadgeHelp className="h-6 w-6 text-yellow-500"/>
                                 }
                                 <span className="text-xs font-medium capitalize">
-                                  {application.status}
+                                  {application.status.charAt(0).toUpperCase() + application.status.slice(1)}
                                 </span>
                               </div>
                             </TooltipTrigger>
@@ -199,11 +239,9 @@ const Applications = () => {
                           <p className="text-sm text-muted-foreground">
                             Own/Rent: {application.ownRent}
                           </p>
-                          {application.landlordContact && (
-                            <p className="text-sm text-muted-foreground">
-                              Landlord Contact: {application.landlordContact}
-                            </p>
-                          )}
+                          <p className="text-sm text-muted-foreground">
+                            Landlord Contact: {application.landlordContact}
+                          </p>
                         </div>
 
                         <div>
@@ -260,12 +298,13 @@ const Applications = () => {
                       {/* Add Download PDF button */}
                       <div className="flex items-center justify-end gap-2">
                         <Button
+                          disabled={isLoading}
                           variant="outline"
                           size="sm"
                           onClick={() => generatePDF(application)}
                           className="flex items-center gap-2"
                         >
-                          <Download className="h-4 w-4" />
+                          {isLoading ? <Loader2 className="h-4 w-4 animate-spin" /> : <Download className="h-4 w-4" />}
                           Download PDF
                         </Button>
                         <Review application={application} />

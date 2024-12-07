@@ -162,7 +162,7 @@ const Dashboard = () => {
       </div>
 
       <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-        <Card>
+        <Card className="col-span-full">
           <CardHeader className="flex items-center justify-between pb-3">
             <CardTitle>Recent Applications</CardTitle>
             <Button variant="link" size="sm" onClick={() => navigate('/admin/applications'/* , { state: { backgroundLocation: location } } */)}>

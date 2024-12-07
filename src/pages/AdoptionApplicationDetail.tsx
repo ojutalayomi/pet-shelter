@@ -4,9 +4,12 @@ import { useSelector } from 'react-redux';
 import { RootState } from '@/redux/store';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Avatar, AvatarFallback } from '@/components/ui/avatar';
-import { BadgeAlert, BadgeCheck, BadgeHelp, InboxIcon, PencilIcon } from 'lucide-react';
+import { BadgeAlert, BadgeCheck, BadgeHelp, Download, InboxIcon, PencilIcon, Loader2 } from 'lucide-react';
 import { Time } from '@/lib/utils';
 import { Button } from '@/components/ui/button';
+import html2canvas from 'html2canvas';
+import jsPDF from 'jspdf';
+import { AdoptionApplicationDetailsForAdmin } from '@/types/type';
 
 const timeInstance = new Time();
 
@@ -16,6 +19,108 @@ const AdoptionApplicationDetail = () => {
   const { applications } = useSelector((state: RootState) => state.pet.adoptionApplicationList);
   const pets = useSelector((state: RootState) => state.pet.petData.pets);
   const [application, setApplication] = useState(applications.find(app => app.petId === petId));
+  const [isLoading, setIsLoading] = useState(false);
+
+  const generatePDF = async (application: AdoptionApplicationDetailsForAdmin) => {
+    setIsLoading(true);
+    // Create a temporary div to render the content
+    const printElement = document.createElement('div');
+    printElement.className = 'pdf-content p-8';
+    
+    // Add your styled HTML content
+    printElement.innerHTML = `
+      <div class="space-y-6">
+        <div class="text-center mb-8">
+          <h1 class="text-2xl font-bold">Adoption Application Details</h1>
+          <p class="text-sm text-gray-500">Application ID: ${application._id}</p>
+          <p class="text-sm text-gray-500">Generated on ${new Date().toLocaleString()}</p>
+          <p class="text-lg text-gray-500">Client's Copy</p>
+        </div>
+
+        <div class="space-y-4">
+          <h2 class="text-xl font-semibold">Applicant Information</h2>
+          <div class="grid grid-cols-2 gap-4">
+            <p><span class="font-medium">Name:</span> ${application.firstName} ${application.lastName}</p>
+            <p><span class="font-medium">Email:</span> ${application.email}</p>
+            <p><span class="font-medium">Phone:</span> ${application.phone}</p>
+            <p><span class="font-medium">Address:</span> ${application.address}, ${application.city}, ${application.state} ${application.zip}</p>
+          </div>
+        </div>
+
+        <div class="space-y-4">
+          <h2 class="text-xl font-semibold">Pet Information</h2>
+          <div class="grid grid-cols-2 gap-4">
+            ${(() => {
+              const pet = pets.find(p => p.id === application.petId);
+              return pet ? `
+                <p><span class="font-medium">Name:</span> ${pet.name}</p>
+                <p><span class="font-medium">Pet ID:</span> ${pet.id}</p>
+                <p><span class="font-medium">Type:</span> ${pet.type}</p>
+                <p><span class="font-medium">Breed:</span> ${pet.breed}</p>
+                <p><span class="font-medium">Age:</span> ${pet.age} year(s)</p>
+              ` : `<p><span class="font-medium">Pet ID:</span> ${application.petId}</p>`;
+            })()}
+          </div>
+        </div>
+
+        <div class="space-y-4">
+          <h2 class="text-xl font-semibold">Housing Information</h2>
+          <div class="grid grid-cols-2 gap-4">
+            <p><span class="font-medium">Housing Type:</span> ${application.housing}</p>
+            <p><span class="font-medium">Own/Rent:</span> ${application.ownRent}</p>
+            ${application.landlordContact ? `<p><span class="font-medium">Landlord Contact:</span> ${application.landlordContact}</p>` : ''}
+          </div>
+        </div>
+
+        ${application.notes ? `
+          <div class="space-y-4">
+            <h2 class="text-xl font-semibold">Notes</h2>
+            <p class="whitespace-pre-wrap">${application.notes}</p>
+          </div>
+        ` : ''}
+
+        <div class="mt-8 pt-4 border-t">
+          <p class="text-sm text-gray-500">Application Status: ${application.status}</p>
+          <p class="text-sm text-gray-500">Submitted: ${timeInstance.formatMoment(application.createdAt)}</p>
+          <p class="text-sm text-gray-500">Last Updated: ${timeInstance.formatMoment(application.updatedAt)}</p>
+        </div>
+      </div>
+    `;
+
+    // Append to document temporarily
+    document.body.appendChild(printElement);
+
+    try {
+      // Convert HTML to canvas
+      const canvas = await html2canvas(printElement, {
+        scale: 2, // Higher quality
+        useCORS: true,
+        logging: false
+      });
+
+      // Create PDF
+      const pdf = new jsPDF('p', 'mm', 'a4');
+      const imgWidth = 210; // A4 width in mm
+      const imgHeight = (canvas.height * imgWidth) / canvas.width;
+      
+      // Add the image to PDF
+      pdf.addImage(
+        canvas.toDataURL('image/png'),
+        'PNG',
+        0,
+        0,
+        imgWidth,
+        imgHeight
+      );
+
+      // Save the PDF
+      pdf.save(`adoption-application-${application.firstName}-${application.lastName}.pdf`);
+    } finally {
+      // Clean up
+      document.body.removeChild(printElement);
+      setIsLoading(false);
+    }
+  };
 
   useEffect(() => {
     setApplication(applications.find(app => app.petId === petId));
@@ -39,8 +144,8 @@ const AdoptionApplicationDetail = () => {
         <CardContent>
           <div className="space-y-4">
             <div className="flex flex-wrap items-center gap-4">
-              <Avatar className="border p-2 rounded-full">
-                <AvatarFallback>
+              <Avatar className="border p-1 rounded-full">
+                <AvatarFallback className="p-1">
                   {application.firstName[0]}{application.lastName[0]}
                 </AvatarFallback>
               </Avatar>
@@ -94,6 +199,9 @@ const AdoptionApplicationDetail = () => {
                   Phone: {application.phone}
                 </p>
                 <p className="text-sm text-muted-foreground">
+                  Emergency Contact: {application.emergencyContact}
+                </p>
+                <p className="text-sm text-muted-foreground">
                   Address: {application.address}
                 </p>
                 <p className="text-sm text-muted-foreground">
@@ -115,11 +223,9 @@ const AdoptionApplicationDetail = () => {
                 <p className="text-sm text-muted-foreground">
                   Own/Rent: {application.ownRent}
                 </p>
-                {application.landlordContact && (
-                  <p className="text-sm text-muted-foreground">
-                    Landlord Contact: {application.landlordContact}
-                  </p>
-                )}
+                <p className="text-sm text-muted-foreground">
+                  Landlord Contact: {application.landlordContact}
+                </p>
               </div>
 
               <div>
@@ -169,6 +275,20 @@ const AdoptionApplicationDetail = () => {
                   <p className="text-sm text-muted-foreground whitespace-pre-wrap">
                     {application.notes}
                   </p>
+                </div>
+              )}
+              {application.status === 'approved' && (
+                <div className="flex items-center justify-end gap-2">
+                  <Button
+                    disabled={isLoading}
+                    variant="outline"
+                    size="sm"
+                    onClick={() => generatePDF(application)}
+                    className="flex items-center gap-2"
+                  >
+                    {isLoading ? <Loader2 className="h-4 w-4 animate-spin" /> : <Download className="h-4 w-4" />}
+                    Download PDF
+                  </Button>
                 </div>
               )}
             </div>

@@ -148,3 +148,33 @@ button:focus-visible {
     @apply bg-background text-foreground;
   }
 }
+
+/* PDF Styles */
+.pdf-content {
+  background: white;
+  color: black;
+  font-family: Arial, sans-serif;
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+.pdf-content h1 {
+  color: #1a1a1a;
+}
+
+.pdf-content h2 {
+  color: #2a2a2a;
+  border-bottom: 1px solid #eaeaea;
+  padding-bottom: 0.5rem;
+}
+
+.pdf-content .font-medium {
+  color: #4a4a4a;
+}
+
+/* Hide the temporary element */
+.pdf-content {
+  position: fixed;
+  top: -9999px;
+  left: -9999px;
+}
