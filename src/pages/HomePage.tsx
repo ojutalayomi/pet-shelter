@@ -8,7 +8,7 @@ import {
   CarouselPrevious,
   CarouselNext,
 } from "@/components/ui/carousel"
-import { useRef } from "react"
+import { useRef, useEffect, useState } from "react"
 import { useFetchDetails } from "@/providers/fetch-details"
 import { ModeToggle } from "@/components/mode-toggle"
 import { Button } from "@/components/ui/button"
@@ -16,10 +16,32 @@ import Autoplay from "embla-carousel-autoplay"
 import { Facebook, Twitter, Instagram, Youtube, ArrowRight, AlertCircle, FileText, ExternalLink, PartyPopper, HeartHandshake } from "lucide-react"
 import { NetworkIndicator } from '@/components/network-indicator'
 import { useNetwork } from "@/providers/useNetwork"
+import { useSelector } from "react-redux"
+import { RootState } from "@/redux/store"
 
 export default function HomePage() {
   const { isLoading, error } = useFetchDetails()
   const { isOnline } = useNetwork()
+  const user = useSelector((state: RootState) => state.user)
+  const [currentBgIndex, setCurrentBgIndex] = useState(0);
+  
+  const backgrounds = [
+    'bg-[url("/paws.jpg")]',
+    'bg-[url("/kitten.jpg")]',
+    'bg-[url("/dog-454145_1920.jpg")]',
+    'bg-[url("/rabbit-8489271_1920.png")]',
+    'bg-[url("/dog-2606759_1920.jpg")]',
+  ];
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setCurrentBgIndex((prev) => (prev + 1) % backgrounds.length);
+    }, 5000); // Change every 5 seconds
+
+    return () => clearInterval(interval);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
   const plugin = useRef(
     Autoplay({ delay: 4000, stopOnInteraction: false })
   )
@@ -28,48 +50,61 @@ export default function HomePage() {
   )
   return (
     <div className="flex min-h-full flex-1 flex-col px-6 py-8 lg:px-8">
-      <div className="absolute top-0 left-0 m-10">
+      <div className="cursor-pointer drop-shadow-lg absolute top-0 left-0 mx-5 my-10 z-50">
         <NetworkIndicator />
       </div>
-      <div className="absolute top-0 right-0 m-10 flex items-center gap-4">
+      <div className="absolute top-0 right-0 mx-5 my-10 flex sm:flex-row flex-col sm:items-center items-end justify-end gap-4 z-50">
         {error.user ?
           <>
-            <Link to="/login" className="text-sm font-medium hover:text-blue-600">
+            <Link to="/login" className="cursor-pointer text-sm font-medium hover:text-blue-600">
               Login
             </Link>
             <span className="text-gray-300">|</span>
-            <Link to="/signup" className="text-sm font-medium hover:text-blue-600">
+            <Link to="/signup" className="cursor-pointer text-sm font-medium hover:text-blue-600">
               Sign up
             </Link>
           </> :
-          <Link to="/accounts/profile" className="text-sm font-medium hover:text-blue-600">
+          <Link to="/accounts/profile" className="cursor-pointer drop-shadow-lg text-sm font-medium hover:text-blue-600">
             My Account
           </Link>
         }
         {isLoading.user && (<div className="h-4 w-4 animate-spin rounded-full border-t-2 border-b-2 border-gray-900 dark:border-gray-100"></div>)}
-        <div className="drop-shadow-lg">
+        <div className="cursor-pointer drop-shadow-lg">
           <ModeToggle />
         </div>
       </div>
 
       {/* Hero Section */}
-      <div className="sm:mx-auto sm:w-full sm:max-w-4xl text-center">
-        <div className="flex items-center justify-center gap-2 sm:mx-auto sm:w-full">
-          <div className="flex aspect-square size-12 items-center justify-center rounded-lg bg-sidebar-primary text-sidebar-primary-foreground">
-            <PawPrint className="size-6" />
+      <div className={`
+        relative w-[100dvw] text-center mt-[-2rem] mx-[-1.5rem] pt-8 pb-8
+        before:absolute before:inset-0 before:z-0
+        ${backgrounds[currentBgIndex]} bg-cover bg-center
+        before:bg-gradient-to-b before:from-background/95 before:to-background/70
+        transition-[background-image] duration-1000 aspect-video max-h-[70dvh]
+      `}>
+        <div className="relative z-10 flex flex-col gap-4 px-4">
+          <div className="flex items-center justify-center gap-2 sm:mx-auto sm:w-full">
+            <div className="flex aspect-square size-12 items-center justify-center rounded-lg bg-sidebar-primary text-sidebar-primary-foreground">
+              <PawPrint className="size-6" />
+            </div>
+            <span className="text-2xl font-bold">Petty Store</span>
           </div>
-          <span className="text-2xl font-bold">Petty Store</span>
-        </div>
-        <h1 className="mt-4 text-4xl font-bold tracking-tight dark:text-gray-100 text-gray-900">
-          Where Every Pet Finds Their Forever Home
-        </h1>
-        <p className="mt-4 text-lg text-gray-600 dark:text-gray-300">
-          Join us in giving animals a second chance at happiness. Adopt, foster, or support our mission today.
-        </p>
-      </div>
+          {!error.user && (
+            <h2 className="text-2xl font-bold bg-gradient-to-r from-blue-500 to-purple-500 bg-clip-text text-transparent animate-gradient-x">
+              Welcome back, {user?.firstName}! ✨
+            </h2>
+          )}
+          <h1 className="mt-4 text-4xl font-bold tracking-tight dark:text-gray-100 text-gray-900">
+            Where Every Pet Finds Their Forever Home
+          </h1>
+          <p className="mt-4 text-lg text-gray-600 dark:text-gray-300">
+            Join us in giving animals a second chance at happiness. Adopt, foster, or support our mission today.
+          </p>
 
-      {/* Search Bar */}
-      <CommandDialogHome />
+          {/* Search Bar */}
+          <CommandDialogHome />
+        </div>
+      </div>
 
       {/* Main Actions Grid */}
       <div className="mt-12">
@@ -128,11 +163,11 @@ export default function HomePage() {
         // onMouseLeave={plugin.current.reset}
       >
         <CarouselContent className="">
-          <CarouselItem className="pl-4 md:basis-1/2 lg:basis-1/3"><div className="aspect-video bg-[url('/paws.jpg')] bg-cover border rounded-xl shadow bg-muted/50" /></CarouselItem>
-          <CarouselItem className="pl-4 md:basis-1/2 lg:basis-1/3"><div className="aspect-video bg-[url('/kitten.jpg')] bg-cover border rounded-xl shadow bg-muted/50" /></CarouselItem>
-          <CarouselItem className="pl-4 md:basis-1/2 lg:basis-1/3"><div className="aspect-video bg-[url('/dog-454145_1920.jpg')] bg-cover border rounded-xl shadow bg-muted/50" /></CarouselItem>
-          <CarouselItem className="pl-4 md:basis-1/2 lg:basis-1/3"><div className="aspect-video bg-[url('/rabbit-8489271_1920.png')] bg-cover border rounded-xl shadow bg-muted/50" /></CarouselItem>
-          <CarouselItem className="pl-4 md:basis-1/2 lg:basis-1/3"><div className="aspect-video bg-[url('/dog-2606759_1920.jpg')] bg-cover border rounded-xl shadow bg-muted/50" /></CarouselItem>
+          {backgrounds.map((bg, index) => (
+            <CarouselItem key={index} className="pl-4 md:basis-1/2 lg:basis-1/3">
+              <div className={`aspect-video ${bg} bg-cover border rounded-xl shadow bg-muted/50`} />
+            </CarouselItem>
+          ))}
         </CarouselContent>
         <CarouselPrevious className="absolute left-2" />
         <CarouselNext className="absolute right-2" />
@@ -147,31 +182,31 @@ export default function HomePage() {
             <h3 className="text-lg font-semibold mb-4">New Pet Owner Guides</h3>
             <ul className="space-y-3">
               <li>
-                <a 
-                  href="/guides/first-time-owner.pdf" 
+                <Link 
+                  to="/guides/first-time-owner.pdf" 
                   className="flex items-center gap-2 text-blue-600 hover:text-blue-700"
                 >
                   <FileText className="h-4 w-4" />
                   First-Time Pet Owner Guide
-                </a>
+                </Link>
               </li>
               <li>
-                <a 
-                  href="/guides/pet-training-basics.pdf"
+                <Link 
+                  to="/guides/pet-training-basics.pdf"
                   className="flex items-center gap-2 text-blue-600 hover:text-blue-700"
                 >
                   <FileText className="h-4 w-4" />
                   Pet Training Basics
-                </a>
+                </Link>
               </li>
               <li>
-                <a 
-                  href="/guides/pet-nutrition.pdf"
+                <Link 
+                  to="/guides/pet-nutrition.pdf"
                   className="flex items-center gap-2 text-blue-600 hover:text-blue-700"
                 >
                   <FileText className="h-4 w-4" />
                   Pet Nutrition Guide
-                </a>
+                </Link>
               </li>
             </ul>
           </div>
@@ -183,7 +218,7 @@ export default function HomePage() {
                 <a 
                   href="https://www.aspca.org/pet-care"
                   target="_blank"
-                  rel="noopener noreferrer"
+                  rel="noopener noreferrer nofollow"
                   className="flex items-center gap-2 text-blue-600 hover:text-blue-700"
                 >
                   <ExternalLink className="h-4 w-4" />
@@ -194,7 +229,7 @@ export default function HomePage() {
                 <a 
                   href="https://www.akc.org/expert-advice/"
                   target="_blank"
-                  rel="noopener noreferrer"
+                  rel="noopener noreferrer nofollow"
                   className="flex items-center gap-2 text-blue-600 hover:text-blue-700"
                 >
                   <ExternalLink className="h-4 w-4" />
@@ -205,7 +240,7 @@ export default function HomePage() {
                 <a 
                   href="https://www.avma.org/resources/pet-owners"
                   target="_blank"
-                  rel="noopener noreferrer"
+                  rel="noopener noreferrer nofollow"
                   className="flex items-center gap-2 text-blue-600 hover:text-blue-700"
                 >
                   <ExternalLink className="h-4 w-4" />

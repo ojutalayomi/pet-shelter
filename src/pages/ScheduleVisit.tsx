@@ -40,6 +40,7 @@ const ScheduleVisit = () => {
   const handleChange = (field: keyof VisitDetails) => (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
   ) => {
+    console.log(e.target.value)
     setVisitDetails(prev => ({
       ...prev,
       [field]: e.target.value
@@ -79,97 +80,95 @@ const ScheduleVisit = () => {
   }
 
   return (
-    <div className="max-w-4xl mx-auto p-6 space-y-8">
-      <Card>
-        <CardHeader>
-          <CardTitle>Schedule a Visit</CardTitle>
-          <p className="text-sm text-gray-500">
-            Fill out the form below to schedule a visit to meet our pets
-          </p>
-        </CardHeader>
-        <CardContent>
-          <form onSubmit={handleSubmit} className="space-y-6">
-            <div className="grid gap-4 md:grid-cols-2">
-              <div className="space-y-2">
-                <Label htmlFor="date">Preferred Date</Label>
-                <Input
-                  id="date"
-                  type="date"
-                  required
-                  value={visitDetails.date}
-                  onChange={handleChange("date")}
-                  min={new Date().toISOString().split('T')[0]}
-                />
-              </div>
-
-              <div className="space-y-2">
-                <Label htmlFor="time">Preferred Time</Label>
-                <Input
-                  id="time"
-                  type="time"
-                  required
-                  value={visitDetails.time}
-                  onChange={handleChange("time")}
-                />
-              </div>
-
-              <div className="space-y-2">
-                <Label htmlFor="name">Full Name</Label>
-                <Input
-                  id="name"
-                  required
-                  value={visitDetails.name}
-                  onChange={handleChange("name")}
-                  placeholder="Enter your full name"
-                />
-              </div>
-
-              <div className="space-y-2">
-                <Label htmlFor="email">Email</Label>
-                <Input
-                  id="email"
-                  type="email"
-                  required
-                  value={visitDetails.email}
-                  onChange={handleChange("email")}
-                  placeholder="Enter your email"
-                />
-              </div>
-
-              <div className="space-y-2">
-                <Label htmlFor="phone">Phone Number</Label>
-                <Input
-                  id="phone"
-                  type="tel"
-                  required
-                  value={visitDetails.phone}
-                  onChange={handleChange("phone")}
-                  placeholder="Enter your phone number"
-                />
-              </div>
-            </div>
-
+    <Card className="h-full p-1">
+      <CardHeader>
+        <CardTitle>Schedule a Visit</CardTitle>
+        <p className="text-sm text-gray-500">
+          Fill out the form below to schedule a visit to meet our pets
+        </p>
+      </CardHeader>
+      <CardContent>
+        <form onSubmit={handleSubmit} className="space-y-6">
+          <div className="grid gap-4 md:grid-cols-2">
             <div className="space-y-2">
-              <Label htmlFor="notes">Additional Notes</Label>
-              <Textarea
-                id="notes"
-                value={visitDetails.notes}
-                onChange={handleChange("notes")}
-                placeholder="Any specific requirements or questions?"
-                rows={4}
+              <Label htmlFor="date">Preferred Date</Label>
+              <Input
+                id="date"
+                type="date"
+                required
+                value={visitDetails.date}
+                onChange={handleChange("date")}
+                min={new Date().toISOString().split('T')[0]}
               />
             </div>
 
-            <div className="flex justify-end">
-              <Button type="submit" disabled={isLoading}>
-                {isLoading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-                Schedule Visit
-              </Button>
+            <div className="space-y-2">
+              <Label htmlFor="time">Preferred Time</Label>
+              <Input
+                id="time"
+                type="time"
+                required
+                value={visitDetails.time}
+                onChange={handleChange("time")}
+              />
             </div>
-          </form>
-        </CardContent>
-      </Card>
-    </div>
+
+            <div className="space-y-2">
+              <Label htmlFor="name">Full Name</Label>
+              <Input
+                id="name"
+                required
+                value={visitDetails.name}
+                onChange={handleChange("name")}
+                placeholder="Enter your full name"
+              />
+            </div>
+
+            <div className="space-y-2">
+              <Label htmlFor="email">Email</Label>
+              <Input
+                id="email"
+                type="email"
+                required
+                value={visitDetails.email}
+                onChange={handleChange("email")}
+                placeholder="Enter your email"
+              />
+            </div>
+
+            <div className="space-y-2">
+              <Label htmlFor="phone">Phone Number</Label>
+              <Input
+                id="phone"
+                type="tel"
+                required
+                value={visitDetails.phone}
+                onChange={handleChange("phone")}
+                placeholder="Enter your phone number"
+              />
+            </div>
+          </div>
+
+          <div className="space-y-2">
+            <Label htmlFor="notes">Additional Notes</Label>
+            <Textarea
+              id="notes"
+              value={visitDetails.notes}
+              onChange={handleChange("notes")}
+              placeholder="Any specific requirements or questions?"
+              rows={4}
+            />
+          </div>
+
+          <div className="flex justify-end">
+            <Button type="submit" disabled={isLoading}>
+              {isLoading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+              Schedule Visit
+            </Button>
+          </div>
+        </form>
+      </CardContent>
+    </Card>
   )
 }
 

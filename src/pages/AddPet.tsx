@@ -91,7 +91,8 @@ const AddPet: React.FC = () => {
                   vaccinated: isVaccinated,
                   neutered: isNeutered,
                   lastCheckup: new Date().toISOString(),
-                }
+                },
+                notes: ''
             }
 
             /* FETCH */
