@@ -20,12 +20,13 @@ import {
 import { Button } from "./ui/button"
 import { toast } from '@/hooks/use-toast';
 import { useNavigate } from "react-router-dom"
-import axios, { AxiosError } from "axios"
+import { AxiosError } from "axios"
 import { PetProfile } from "@/types/type"
 // import { Card, CardContent, CardHeader } from "./ui/card"
 import { Input } from "./ui/input"
 import { Separator } from "./ui/separator"
 import { useNetwork } from "@/providers/useNetwork"
+import { api } from "@/providers/fetch-details"
 
 export function CommandDialogHome({ onSelect }: { onSelect?: (pet: PetProfile) => void }) {
   const navigate = useNavigate()
@@ -48,7 +49,7 @@ export function CommandDialogHome({ onSelect }: { onSelect?: (pet: PetProfile) =
         // }
 
         /* AXIOS */
-        const response = await axios.get(`${import.meta.env.VITE_API_URL}/pets/search?query=${encodeURIComponent(search)}`)
+        const response = await api.get(`/pets/search?query=${encodeURIComponent(search)}`)
 
         if (response.status === 200) {
           setResults(response.data)

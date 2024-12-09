@@ -56,11 +56,11 @@ export default function HomePage() {
       <div className="absolute top-0 right-0 mx-5 my-10 flex sm:flex-row flex-col sm:items-center items-end justify-end gap-4 z-50">
         {error.user ?
           <>
-            <Link to="/login" className="cursor-pointer text-sm font-medium hover:text-blue-600">
+            <Link to="/accounts/login" className="cursor-pointer text-sm font-medium hover:text-blue-600">
               Login
             </Link>
             <span className="text-gray-300">|</span>
-            <Link to="/signup" className="cursor-pointer text-sm font-medium hover:text-blue-600">
+            <Link to="/accounts/signup" className="cursor-pointer text-sm font-medium hover:text-blue-600">
               Sign up
             </Link>
           </> :

@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
-// import axios from 'axios'
+// import { api } from "@/providers/fetch-details"
 import { PetProfile, PetStatus } from '@/types/type'
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { Button } from '@/components/ui/button'
@@ -32,7 +32,7 @@ function PetList({ filter }: { filter?: PetStatus }) {
     //         // if (response.status === 200) setPets(data)
 
     //         /* AXIOS */
-    //         const response = await axios.get(import.meta.env.VITE_API_URL+'/pets')
+    //         const response = await api.get('/pets')
     //         if (response.status === 200) setPets(response.data)
 
     //     } catch (error) {

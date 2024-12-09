@@ -16,6 +16,8 @@ const SwitchUser = lazy(() => import ('@/pages/accounts/SwitchUser'))
 const Applications = lazy(() => import ('@/pages/admin/Applications'))
 const Invite = lazy(() => import ('@/pages/admin/Invite'))
 const Dashboard = lazy(() => import ('@/pages/admin/Dashboard'))
+const ManageUsers = lazy(() => import ('@/pages/admin/ManageUsers'))
+const ScheduledVisits = lazy(() => import('@/pages/admin/ScheduledVisits'))
 
 const PetList = lazy(() => import ('@/pages/PetList'))
 const EmergencyCare = lazy(() => import ('@/pages/EmergencyCare'))
@@ -54,49 +56,54 @@ function Main() {
 
         {/* Accounts */}
 
-        <Route path='/accounts/login' element={<Suspense fallback={<></>}><SignIn /></Suspense>}/>
-
-        <Route path='/accounts/signup' element={<Suspense fallback={<></>}><SignUp /></Suspense>}/>
-
-        <Route path='/accounts/confirm-email' element={<Suspense fallback={<></>}><ConfirmEmail /></Suspense>}/>
-
-        <Route path='/accounts/forgot-password' element={<Suspense fallback={<></>}><ForgotPassword /></Suspense>}/>
-
-        <Route path='/accounts/reset-password' element={<Suspense fallback={<></>}><ResetPassword /></Suspense>}/>
-
-        <Route path='/accounts/profile' element={<Suspense fallback={<></>}><Profile /></Suspense>}/>
-
-        {isDirectAccess('/accounts/switch-user') && (
-          <Route path="/accounts/switch-user" element={
-            <Suspense fallback={<></>}>
-              <SwitchUser />
-            </Suspense>
-          } />
-        )}
-
-        <Route path='/accounts/logout' element={<Suspense fallback={<></>}><LogOut /></Suspense>}/>
+        <Route path='/accounts/*' element={
+          <Routes>
+            <Route path='login' element={<Suspense fallback={<></>}><SignIn /></Suspense>}/>
+            <Route path='signup' element={<Suspense fallback={<></>}><SignUp /></Suspense>}/>
+            <Route path='confirm-email' element={<Suspense fallback={<></>}><ConfirmEmail /></Suspense>}/>
+            <Route path='forgot-password' element={<Suspense fallback={<></>}><ForgotPassword /></Suspense>}/>
+            <Route path='reset-password' element={<Suspense fallback={<></>}><ResetPassword /></Suspense>}/>
+            <Route path='profile' element={<Suspense fallback={<></>}><Profile /></Suspense>}/>
+            {isDirectAccess('/accounts/switch-user') && (
+              <Route path="switch-user" element={
+                <Suspense fallback={<></>}>
+                  <SwitchUser />
+                </Suspense>
+              } />
+            )}
+            <Route path='logout' element={<Suspense fallback={<></>}><LogOut /></Suspense>}/>
+          </Routes>
+        }/>
 
         {/* Admin */}
 
-        <Route path='/admin/dashboard' element={<Suspense fallback={<></>}><Dashboard /></Suspense>}/>
+        <Route path='/admin/*' element={
+          <Routes>
+            <Route path='dashboard' element={<Suspense fallback={<></>}><Dashboard /></Suspense>}/>
 
-        {isDirectAccess('/admin/invite') && (
-          <Route path="/admin/invite" element={
-            <Suspense fallback={<></>}>
-              <Invite />
-            </Suspense>
-          } />
-        )}
+            {isDirectAccess('/admin/invite') && (
+              <Route path="invite" element={
+                <Suspense fallback={<></>}>
+                  <Invite />
+                </Suspense>
+              } />
+            )}
 
-        {isDirectAccess('/admin/applications') && (
-          <Route path="/admin/applications" element={
-            <Suspense fallback={<></>}>
-              <Applications />
-            </Suspense>
-          } />
-        )}
+            {isDirectAccess('/admin/applications') && (
+              <Route path="applications" element={
+                <Suspense fallback={<></>}>
+                  <Applications />
+                </Suspense>
+              } />
+            )}
 
-        <Route path='/admin/pets/add' element={<Suspense fallback={<></>}><AddPet /></Suspense>}/>
+            <Route path='pets/add' element={<Suspense fallback={<></>}><AddPet /></Suspense>}/>
+
+            <Route path='users' element={<Suspense fallback={<></>}><ManageUsers /></Suspense>}/>
+
+            <Route path='visits' element={<Suspense fallback={<></>}><ScheduledVisits /></Suspense>}/>
+          </Routes>
+        }/>
 
         {/* Pet Detail */}
 
@@ -116,15 +123,15 @@ function Main() {
 
         {/* Settings */}
 
-        <Route path='/settings' element={<Suspense fallback={<></>}><Menu filter='settings'/></Suspense>}/>
-
-        <Route path='/settings/account' element={<Suspense fallback={<></>}><Settings /></Suspense>}/>
-
-        <Route path='/settings/permissions' element={<Suspense fallback={<></>}><Permissions /></Suspense>}/>
-
-        <Route path='/settings/notifications' element={<Suspense fallback={<></>}><Notifications /></Suspense>}/>
-
-        <Route path='/settings/shelter-info' element={<Suspense fallback={<></>}><ShelterInfo /></Suspense>}/>
+        <Route path='/settings/*' element={
+          <Routes>
+            <Route path='' element={<Suspense fallback={<></>}><Menu filter='settings'/></Suspense>}/>
+            <Route path='account' element={<Suspense fallback={<></>}><Settings /></Suspense>}/>
+            <Route path='permissions' element={<Suspense fallback={<></>}><Permissions /></Suspense>}/>
+            <Route path='notifications' element={<Suspense fallback={<></>}><Notifications /></Suspense>}/>
+            <Route path='shelter-info' element={<Suspense fallback={<></>}><ShelterInfo /></Suspense>}/>
+          </Routes>
+        }/>
 
         {/* Help Center */}
 
@@ -154,11 +161,13 @@ function Main() {
 
         {/* Pet Management */}
 
-        <Route path='/pet-management/available-pets' element={<Suspense fallback={<></>}><PetList filter='available'/></Suspense>}/>
-
-        <Route path='/pet-management/adopted-pets' element={<Suspense fallback={<></>}><PetList filter='adopted'/></Suspense>}/>
-
-        <Route path='/pet-management/foster-care' element={<Suspense fallback={<></>}><PetList filter='fostered'/></Suspense>}/>
+        <Route path='/pet-management/*' element={
+          <Routes>
+            <Route path='available-pets' element={<Suspense fallback={<></>}><PetList filter='available'/></Suspense>}/>
+            <Route path='adopted-pets' element={<Suspense fallback={<></>}><PetList filter='adopted'/></Suspense>}/>
+            <Route path='foster-care' element={<Suspense fallback={<></>}><PetList filter='fostered'/></Suspense>}/>
+          </Routes>
+        }/>
 
         <Route path='*' element={<Error404Page />}/>
       </Routes>
@@ -174,24 +183,28 @@ function Main() {
               </ModalRoute>
             }
           />
-          <Route path="/admin/applications" 
-            element={
-              <ModalRoute title="Adoption Applications">
-                <Suspense fallback={<></>}>
-                  <Applications />
-                </Suspense>
-              </ModalRoute>
-            }
-          />
-          <Route path="/admin/invite" 
-            element={
-              <ModalRoute title="Admin Invite">
-                <Suspense fallback={<></>}>
-                  <Invite />
-                </Suspense>
-              </ModalRoute>
-            }
-          />
+          <Route path="/admin/*" element={
+            <Routes>
+              <Route path="applications" 
+                element={
+                  <ModalRoute title="Adoption Applications">
+                    <Suspense fallback={<></>}>
+                      <Applications />
+                    </Suspense>
+                  </ModalRoute>
+                }
+              />
+              <Route path="invite"
+                element={
+                  <ModalRoute title="Admin Invite">
+                    <Suspense fallback={<></>}>
+                      <Invite />
+                    </Suspense>
+                  </ModalRoute>
+                }
+              />
+            </Routes>
+          }/>
         </Routes>
       )}
     </>

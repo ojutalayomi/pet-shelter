@@ -6,7 +6,8 @@ import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 import { RootState } from '@/redux/store';
 import { useSelector, useDispatch } from 'react-redux';
 import { toast } from '@/hooks/use-toast';
-import axios, { AxiosError } from 'axios';
+import { api } from "@/providers/fetch-details"
+import { AxiosError } from 'axios';
 import { updateUserProfile } from '@/redux/userSlice';
 import { User } from '@/types/type';
 import { LoaderCircle } from 'lucide-react';
@@ -86,8 +87,8 @@ const AccountSettings: React.FC<AccountSettingsProps> = ({
             // }
 
             /* AXIOS */
-            const response = await axios.put(
-                `${import.meta.env.VITE_API_URL}/users/${user.id}`,
+            const response = await api.put(
+                `/users/${user.id}`,
                 data,
                 { headers: { 'Content-Type': 'application/json' }, withCredentials: true }
             )

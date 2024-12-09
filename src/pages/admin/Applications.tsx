@@ -11,7 +11,8 @@ import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/comp
 import { BadgeAlert, BadgeCheck, BadgeHelp, InboxIcon, Download, Loader2 } from 'lucide-react';
 import { Time } from '@/lib/utils';
 import { AdoptionApplicationDetailsForAdmin } from '@/types/type';
-import axios, { AxiosError } from 'axios';
+import { api } from "@/providers/fetch-details"
+import { AxiosError } from 'axios';
 import { toast } from '@/hooks/use-toast';
 import { updateAdoptionApplicationForAdmin } from '@/redux/petSlice';
 import { Textarea } from '@/components/ui/textarea';
@@ -365,7 +366,7 @@ const Review = ({ application }: { application: AdoptionApplicationDetailsForAdm
     setIsLoading(true);
     try {
       const updatedAt = new Date().toISOString();
-      const response = await axios.put(`${import.meta.env.VITE_API_URL}/pets/adoption-application/${application._id}`, {
+      const response = await api.put(`/pets/adoption-application/${application._id}`, {
         updatedAt,
         status,
         notes

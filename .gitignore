@@ -26,6 +26,8 @@ dist-ssr
 .env
 .env.local
 .env.development
+.env.testing
+*.env
 
 info.txt
 info-1.txt

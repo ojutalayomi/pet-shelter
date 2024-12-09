@@ -18,13 +18,13 @@ import { Button } from '@/components/ui/button';
 import { Avatar, AvatarFallback } from '@radix-ui/react-avatar';
 import { useSelector } from 'react-redux';
 import { RootState } from '@/redux/store';
-import { PawPrint, Users, Package, DollarSign, TrendingUp, UserPlus, Send, Loader2, InboxIcon, BadgeAlert, BadgeCheck, BadgeHelp } from 'lucide-react';
-import axios, { AxiosError } from 'axios';
+import { PawPrint, Users, Package, DollarSign, TrendingUp, UserPlus, Send, Loader2, InboxIcon, BadgeAlert, BadgeCheck, BadgeHelp, Calendar } from 'lucide-react';
+import { AxiosError } from 'axios';
 import { toast } from '@/hooks/use-toast';
 import { useNavigate } from 'react-router-dom';
 import { User } from '@/types/type';
 import { Time } from '@/lib/utils';
-import { useFetchDetails } from '@/providers/fetch-details';
+import { api, useFetchDetails } from '@/providers/fetch-details';
 
 const timeInstance = new Time();
 
@@ -94,9 +94,6 @@ const Dashboard = () => {
     <div className="flex flex-col gap-6 p-6">
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-3">
-          <div className="flex aspect-square size-12 items-center justify-center rounded-lg bg-sidebar-primary text-sidebar-primary-foreground">
-            <PawPrint className="size-6" />
-          </div>
           <div>
             <h1 className="text-2xl font-bold">Welcome back, {user.firstName}!</h1>
             <p className="text-muted-foreground">Here's what's happening with your store today.</p>
@@ -279,8 +276,12 @@ const Dashboard = () => {
               <Button onClick={() => navigate('/admin/reports')} variant="outline" className="w-full justify-start">
                 <DollarSign className="mr-2 size-4" />
                 View Reports
-              </Button>
+              </Button >
               <InviteAdminButton />
+              <Button onClick={() => navigate('/admin/visits')} variant="outline" className="w-full justify-start">
+                <Calendar className="size-4 mr-2" />
+                Scheduled Visits
+              </Button>
             </div>
           </CardContent>
         </Card>
@@ -305,7 +306,7 @@ export function InviteAdminButton() {
     setIsLoading(true);
     
     try {
-      const response = await axios.post(import.meta.env.VITE_API_URL+'/users/invite', 
+      const response = await api.post('/users/invite', 
         data,
         { headers: {
           'Content-Type': 'application/json',
@@ -355,7 +356,7 @@ export function InviteAdminButton() {
   return (
     <Dialog>
       <DialogTrigger asChild>
-        <Button variant="outline" className="w-full justify-start">
+        <Button variant="outline" className="justify-start">
           <UserPlus className="mr-2 size-4" />
           Invite Admin
         </Button>

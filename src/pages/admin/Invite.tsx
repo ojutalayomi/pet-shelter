@@ -12,12 +12,12 @@ import { PawPrint, ChevronRight, ChevronLeft, Loader2 } from 'lucide-react';
 import { Step1, Step2, Step3 } from '@/components/signup-steps';
 import { formSchema, FormData, FormStep, User } from '@/types/type';
 import { toast } from '@/hooks/use-toast';
-import axios, { AxiosError } from 'axios';
+import { AxiosError } from 'axios';
 import { useDispatch, useSelector } from 'react-redux';
 import { setUser } from '@/redux/userSlice';
 import { Link, useLocation, useNavigate, useSearchParams } from 'react-router-dom';
 import { cn, generateId, setCookie } from '@/lib/utils';
-import { useFetchDetails } from '@/providers/fetch-details';
+import { api, useFetchDetails } from '@/providers/fetch-details';
 import { RootState } from '@/redux/store';
 
 type FormSchemaType = z.infer<typeof formSchema>;
@@ -127,8 +127,8 @@ const InviteComponent = ({ className }: { className?: string }) => {
         // }
 
         /* AXIOS */
-        const response = await axios.post(
-            import.meta.env.VITE_API_URL+'/users',
+        const response = await api.post(
+            '/users',
             userData,
             { 
               headers: { 
@@ -241,8 +241,8 @@ const InviteComponent = ({ className }: { className?: string }) => {
               onClick={async () => {
                 setIsLoading(true)
                 try {
-                  const response = await axios.put(
-                    `${import.meta.env.VITE_API_URL}/users/${user.id}`,
+                  const response = await api.put(
+                    `/users/${user.id}`,
                     { role: 'admin' },
                     { headers: { 
                       'Content-Type': 'application/json',

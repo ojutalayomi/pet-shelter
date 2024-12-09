@@ -12,12 +12,12 @@ import { PawPrint, ChevronRight, ChevronLeft, Loader2 } from 'lucide-react';
 import { Step1, Step2, Step3 } from '@/components/signup-steps';
 import { formSchema, FormData, FormStep, User } from '@/types/type';
 import { toast } from '@/hooks/use-toast';
-import axios, { AxiosError } from 'axios';
+import { AxiosError } from 'axios';
 import { useDispatch } from 'react-redux';
 import { setUser } from '@/redux/userSlice';
 import { useNavigate } from 'react-router-dom';
 import { generateId, setCookie } from '@/lib/utils';
-import { useFetchDetails } from '@/providers/fetch-details';
+import { api, useFetchDetails } from '@/providers/fetch-details';
 
 type FormSchemaType = z.infer<typeof formSchema>;
 
@@ -94,8 +94,8 @@ const SignUp = () => {
         // }
 
         /* AXIOS */
-        const response = await axios.post(
-            import.meta.env.VITE_API_URL+'/users',
+        const response = await api.post(
+            '/users',
             userData,
             { headers: { 'Content-Type': 'application/json' } }
         )

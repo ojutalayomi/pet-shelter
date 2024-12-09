@@ -1,5 +1,5 @@
 import { Dispatch, useState } from 'react'
-import axios from 'axios'
+import { api } from "@/providers/fetch-details"
 import { useNavigate } from 'react-router-dom'
 import { Button } from "@/components/ui/button"
 import {
@@ -110,8 +110,8 @@ const AddPet: React.FC = () => {
             // }
 
             /* AXIOS */
-            const response = await axios.post(
-                import.meta.env.VITE_API_URL+'/pets/',
+            const response = await api.post(
+                '/pets/',
                 petData,
                 { headers: { 'Content-Type': 'application/json' } }
             )

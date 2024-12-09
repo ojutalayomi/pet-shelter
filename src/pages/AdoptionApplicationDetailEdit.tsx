@@ -11,7 +11,8 @@ import { Label } from '@/components/ui/label';
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import type { AdoptionApplicationDetailsForAdmin } from '@/types/type';
 import { toast } from '@/hooks/use-toast';
-import axios, { AxiosError } from 'axios';
+import { AxiosError } from 'axios';
+import { api } from "@/providers/fetch-details"
 import { updateAdoptionApplication } from '@/redux/petSlice';
 
 const AdoptionApplicationDetailEdit = () => {
@@ -68,7 +69,7 @@ const AdoptionApplicationDetailEdit = () => {
             const newFormData = {...formData}
             delete newFormData._id;
             const updatedAt = new Date().toISOString();
-            const response = await axios.put(`${import.meta.env.VITE_API_URL}/pets/adoption-application/${application._id}`, {
+            const response = await api.put(`/pets/adoption-application/${application._id}`, {
                 ...newFormData,
                 updatedAt
             }, {

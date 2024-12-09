@@ -1,6 +1,7 @@
 import { toast } from "@/hooks/use-toast";
 import { updateAccountDetails, updateVerificationStatus } from "@/redux/userSlice";
-import axios, { AxiosError } from "axios";
+import { api } from "@/providers/fetch-details"
+import { AxiosError } from "axios";
 import { LoaderCircle, PawPrint } from "lucide-react";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
@@ -55,8 +56,8 @@ export default function ConfirmEmail() {
 
     const fetchEmailConfirmationCode = useCallback(async () => {
         try {
-            const response = await axios.post(
-                import.meta.env.VITE_API_URL+'/users/confirm-email',
+            const response = await api.post(
+                '/users/confirm-email',
                 { code: true, email: email },
                 { headers: { 'Content-Type': 'application/json' } }
             );
@@ -109,8 +110,8 @@ export default function ConfirmEmail() {
             // }
 
             /* AXIOS */
-            const response = await axios.post(
-                import.meta.env.VITE_API_URL+'/users/confirm-email',
+            const response = await api.post(
+                '/users/confirm-email',
                 userData,
                 { headers: { 'Content-Type': 'application/json' } }
             )

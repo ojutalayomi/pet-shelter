@@ -1,8 +1,8 @@
 import { toast } from "@/hooks/use-toast";
 import { setCookie, UserList, switchUser } from "@/lib/utils";
-import { useFetchDetails } from "@/providers/fetch-details"
+import { api, useFetchDetails } from "@/providers/fetch-details"
 import { setUser } from "@/redux/userSlice";
-import axios, { AxiosError } from "axios";
+import { AxiosError } from "axios";
 import { ArrowRight, Check, Eye, EyeOff, LoaderCircle, PawPrint } from "lucide-react";
 import { useState, useEffect } from "react";
 import { useDispatch } from "react-redux";
@@ -96,8 +96,8 @@ export default function SignIn() {
             // }
 
             /* AXIOS */
-            const response = await axios.post(
-                import.meta.env.VITE_API_URL+'/users/signin',
+            const response = await api.post(
+                '/users/signin',
                 userData,
                 { headers: { 'Content-Type': 'application/json' } }
             )

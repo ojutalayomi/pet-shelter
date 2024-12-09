@@ -8,7 +8,8 @@ import { Textarea } from "@/components/ui/textarea"
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group"
 import { useSelector, useDispatch } from 'react-redux'
 import { RootState } from '@/redux/store'
-import axios, { AxiosError } from 'axios'
+import { AxiosError } from 'axios'
+import { api } from "@/providers/fetch-details"
 import { useToast } from '@/hooks/use-toast'
 import { addAdoptionApplication } from '@/redux/petSlice'
 
@@ -75,7 +76,7 @@ function AdoptionApplication() {
         // }
 
         /* AXIOS */
-        const response = await axios.post(`${import.meta.env.VITE_API_URL}/pets/adoption-application`, 
+        const response = await api.post(`${import.meta.env.VITE_API_URL}/pets/adoption-application`, 
           formData, {
             withCredentials: true
           })

@@ -14,7 +14,7 @@ export interface UserList {
 
 export type ResponseType = "countdown" | "getlivetime" | "chat-time";
 
-const isProduction = process.env.NODE_ENV === 'production';
+const isProduction = import.meta.env.MODE === 'production';
 
 const cookieOptions = {
 	expires: 7,
@@ -23,7 +23,7 @@ const cookieOptions = {
 		? {
 			sameSite: 'None' as const,
 			secure: true,
-			domain: 'your-production-domain.com' // Set your production domain
+			domain: import.meta.env.VITE_API_URL.replace('https://','') // Set your production domain
 		}
 		: {
 			sameSite: 'Lax' as const,

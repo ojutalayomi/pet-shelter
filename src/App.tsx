@@ -7,6 +7,8 @@ import { ThemeProvider } from '@/providers/theme-provider'
 import FetchDetailsProvider from '@/providers/fetch-details'
 import { NetworkProvider } from '@/providers/network-provider'
 import HomePage from '@/pages/HomePage'
+import Donate from '@/pages/Donate'
+import DonateSuccess from "@/pages/DonateSuccess"
 
 function App() {
 
@@ -18,6 +20,8 @@ function App() {
             <div className="App h-screen w-screen">
               <Routes>
                 <Route path='/' element={<HomePage />} />
+                <Route path='/donate' element={<Donate />}/>
+                <Route path='/donate/success' element={<DonateSuccess />} />
                 <Route path='/*' element={
                   <SidebarProvider>
                     <AppSidebar>

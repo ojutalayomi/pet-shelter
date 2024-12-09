@@ -9,6 +9,9 @@ import { useToast } from "@/hooks/use-toast"
 import { updateDisplay } from "@/redux/settingsSlice"
 import { useDispatch } from "react-redux"
 import { AppDispatch } from "@/redux/store"
+import { api } from "@/providers/fetch-details"
+import { useSelector } from "react-redux"
+import { RootState } from "@/redux/store"
 
 interface VisitDetails {
   date: string
@@ -21,13 +24,14 @@ interface VisitDetails {
 
 const ScheduleVisit = () => {
   const dispatch = useDispatch<AppDispatch>()
+  const user = useSelector((state: RootState) => state.user)
   const [isLoading, setIsLoading] = useState(false)
   const { toast } = useToast()
   const [visitDetails, setVisitDetails] = useState<VisitDetails>({
     date: "",
     time: "",
-    name: "",
-    email: "",
+    name: `${user.firstName } ${user.lastName}`,
+    email: user.email,
     phone: "",
     notes: ""
   })
@@ -52,22 +56,24 @@ const ScheduleVisit = () => {
     setIsLoading(true)
 
     try {
-      // TODO: Implement API call to schedule visit
-      await new Promise(resolve => setTimeout(resolve, 1500)) // Simulated API delay
+      const { date, time, ...rest } = visitDetails
+      const combinedDateTime = new Date(`${date}, ${time}`).toISOString()
+      const response = await api.post('/users/schedule-visit', { ...rest, visitDateAndTime: combinedDateTime })
+      if(response.status === 200) {
+        toast({
+          title: "Visit Scheduled",
+          description: "Your visit has been successfully scheduled. We'll contact you soon.",
+        })
+        setVisitDetails({
+          date: "",
+          time: "",
+          name: "",
+          email: "",
+          phone: "",
+          notes: ""
+        })
+      }
       
-      toast({
-        title: "Visit Scheduled",
-        description: "Your visit has been successfully scheduled. We'll contact you soon.",
-      })
-
-      setVisitDetails({
-        date: "",
-        time: "",
-        name: "",
-        email: "",
-        phone: "",
-        notes: ""
-      })
     } catch (error: unknown) {
       toast({
         title: "Error",

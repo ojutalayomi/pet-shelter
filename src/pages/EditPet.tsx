@@ -1,6 +1,6 @@
 import React, { Dispatch, useEffect, useState } from 'react'
 import { useParams, useNavigate } from 'react-router-dom'
-import axios from 'axios'
+import { api } from "@/providers/fetch-details"
 import { useDispatch, useSelector } from 'react-redux'
 import { PetStatus } from '../types/type'
 import { Button } from "@/components/ui/button"
@@ -117,8 +117,8 @@ const EditPet: React.FC = () => {
             // })
 
             /* AXIOS */
-            const response = await axios.put(
-                `${import.meta.env.VITE_API_URL}/pets/${petToEdit.id}`,
+            const response = await api.put(
+                `/pets/${petToEdit.id}`,
                 petData,
                 { headers: { 'Content-Type': 'application/json' } }
             )

@@ -11,12 +11,21 @@ import { setUser } from '@/redux/userSlice'
 import { RootState } from '@/redux/store'
 import { User } from '@/types/type'
 
-const api = axios.create({
-  baseURL: import.meta.env.VITE_API_URL,
+// Determine the environment
+const isTesting = (window.location.protocol === 'https:' && import.meta.env.MODE === 'development') ? import.meta.env.VITE_SERVER_URL : import.meta.env.VITE_API_URL;
+
+// eslint-disable-next-line react-refresh/only-export-components
+export const api = axios.create({
+  baseURL: isTesting, // Use the local development URL
   withCredentials: true, // Important for sending cookies
   headers: {
     'Content-Type': 'application/json',
   },
+});
+
+api.interceptors.request.use((config) => {
+  config.withCredentials = true;
+  return config;
 });
 
 // Define the context type
@@ -140,7 +149,7 @@ const FetchDetailsProvider: React.FC<{children: React.ReactNode}> = ({ children 
       setIsLoading(prev => ({ ...prev, applications: true }))
       setError(prev => ({ ...prev, applications: null }))
       try {
-        const response = await axios.get(import.meta.env.VITE_API_URL+'/pets/adoption-applications',
+        const response = await api.get('/pets/adoption-applications',
           {
             ...(userRole !== 'user' ? {
               headers: { 

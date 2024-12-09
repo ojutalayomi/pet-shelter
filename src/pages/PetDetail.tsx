@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { useParams, useNavigate } from 'react-router-dom'
-import axios from 'axios'
+import { api } from "@/providers/fetch-details"
 // import { PetProfile } from '../types/type'
 import { Card, CardHeader, CardTitle, CardContent, CardFooter } from '@/components/ui/card'
 import { Calendar, CircleX, Heart, Medal, Pen, Plus } from 'lucide-react'
@@ -50,7 +50,7 @@ const PetDetail = () => {
     //         // }
 
     //         /* AXIOS */
-    //         const response = await axios.get(`${import.meta.env.VITE_API_URL}/pets/${petId}`)
+    //         const response = await api.get(`/pets/${petId}`)
     //         if (response.status === 200) {
     //             setPet(response.data)
     //         }
@@ -70,7 +70,7 @@ const PetDetail = () => {
             // })
 
             /* AXIOS */
-            const response = await axios.delete(`${import.meta.env.VITE_API_URL}/pets/${petId}`)
+            const response = await api.delete(`/pets/${petId}`)
 
             if (response.status === 200) {
                 if (petId) dispatch(deletePet(petId))
