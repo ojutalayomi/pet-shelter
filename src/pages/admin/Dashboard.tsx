@@ -282,6 +282,10 @@ const Dashboard = () => {
                 <Calendar className="size-4 mr-2" />
                 Scheduled Visits
               </Button>
+              <Button onClick={() => navigate('/admin/emergency-care')} variant="outline" className="w-full justify-start truncate">
+                <BadgeHelp className="size-4 mr-2" />
+                Emergency Care Requests
+              </Button>
             </div>
           </CardContent>
         </Card>
@@ -422,7 +426,7 @@ export function InviteAdminButton() {
               Close
             </Button>
           </DialogClose>
-          <Button disabled={isLoading} onClick={handleInvite} type="submit" size="sm" className="px-3">
+          <Button disabled={isLoading || !data.email || !data.name} onClick={handleInvite} type="submit" size="sm" className="px-3">
             { isLoading ?
               <>
                 <span className="sr-only">Loading...</span>

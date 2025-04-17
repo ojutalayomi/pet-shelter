@@ -46,11 +46,11 @@ export default function HomePage() {
     Autoplay({ delay: 4000, stopOnInteraction: false })
   )
   const plugin2 = useRef(
-    Autoplay({ delay: 8000, stopOnInteraction: false })
+    Autoplay({ delay: 5000, stopOnInteraction: false })
   )
   return (
     <div className="flex min-h-full flex-1 flex-col px-6 py-8 lg:px-8">
-      <div className="cursor-pointer drop-shadow-lg absolute top-0 left-0 mx-5 my-10 z-50">
+      <div className="cursor-pointer drop-shadow-lg absolute top-0 left-0 mx-10 my-10 z-50">
         <NetworkIndicator />
       </div>
       <div className="absolute top-0 right-0 mx-5 my-10 flex sm:flex-row flex-col sm:items-center items-end justify-end gap-4 z-50">
@@ -82,7 +82,7 @@ export default function HomePage() {
         before:bg-gradient-to-b before:from-background/95 before:to-background/70
         transition-[background-image] duration-1000 aspect-video max-h-[70dvh]
       `}>
-        <div className="relative z-10 flex flex-col gap-4 px-4">
+        <div className="relative z-10 flex flex-col gap-4 mt-10 px-4">
           <div className="flex items-center justify-center gap-2 sm:mx-auto sm:w-full">
             <div className="flex aspect-square size-12 items-center justify-center rounded-lg bg-sidebar-primary text-sidebar-primary-foreground">
               <PawPrint className="size-6" />
@@ -318,7 +318,7 @@ export default function HomePage() {
           className="w-full"
         >
           <CarouselContent className="">
-            <CarouselItem className="pl-4">
+            <CarouselItem className="pl-4 md:basis-1/2 lg:basis-1/3">
               <div className="p-6 rounded-xl border bg-white/50 dark:bg-white/10 backdrop-blur-sm">
                 <p className="text-gray-600 dark:text-gray-400 italic">"Working with these animals has been one of the most rewarding experiences of my life. The dedication of the staff and the love these pets receive is truly inspiring."</p>
                 <div className="mt-4 flex items-center gap-3">
@@ -330,7 +330,7 @@ export default function HomePage() {
                 </div>
               </div>
             </CarouselItem>
-            <CarouselItem className="pl-4">
+            <CarouselItem className="pl-4 md:basis-1/2 lg:basis-1/3">
               <div className="p-6 rounded-xl border bg-white/50 dark:bg-white/10 backdrop-blur-sm">
                 <p className="text-gray-600 dark:text-gray-400 italic">"The joy of seeing pets find their forever homes makes every minute spent here worthwhile. This shelter truly makes a difference in both animals' and people's lives."</p>
                 <div className="mt-4 flex items-center gap-3">
@@ -342,7 +342,7 @@ export default function HomePage() {
                 </div>
               </div>
             </CarouselItem>
-            <CarouselItem className="pl-4">
+            <CarouselItem className="pl-4 md:basis-1/2 lg:basis-1/3">
               <div className="p-6 rounded-xl border bg-white/50 dark:bg-white/10 backdrop-blur-sm">
                 <p className="text-gray-600 dark:text-gray-400 italic">"Being part of this community has shown me the incredible impact we can have when we come together to help these amazing animals. Every day brings new opportunities to make a difference."</p>
                 <div className="mt-4 flex items-center gap-3">
@@ -350,6 +350,30 @@ export default function HomePage() {
                   <div>
                     <h4 className="font-semibold">Emily Rodriguez</h4>
                     <p className="text-sm text-gray-500">Volunteer since 2023</p>
+                  </div>
+                </div>
+              </div>
+            </CarouselItem>
+            <CarouselItem className="pl-4 md:basis-1/2 lg:basis-1/3">
+              <div className="p-6 rounded-xl border bg-white/50 dark:bg-white/10 backdrop-blur-sm">
+                <p className="text-gray-600 dark:text-gray-400 italic">"The training and support provided by the shelter team has been exceptional. I've learned so much about animal care and behavior while volunteering here."</p>
+                <div className="mt-4 flex items-center gap-3">
+                  <img src="/testimonial-4.jpg" alt="David" className="w-12 h-12 rounded-full object-cover" />
+                  <div>
+                    <h4 className="font-semibold">David Wilson</h4>
+                    <p className="text-sm text-gray-500">Volunteer since 2020</p>
+                  </div>
+                </div>
+              </div>
+            </CarouselItem>
+            <CarouselItem className="pl-4 md:basis-1/2 lg:basis-1/3">
+              <div className="p-6 rounded-xl border bg-white/50 dark:bg-white/10 backdrop-blur-sm">
+                <p className="text-gray-600 dark:text-gray-400 italic">"From day one, I felt welcomed into this amazing community. The bonds formed with both the animals and fellow volunteers have enriched my life in countless ways."</p>
+                <div className="mt-4 flex items-center gap-3">
+                  <img src="/testimonial-5.jpg" alt="Lisa" className="w-12 h-12 rounded-full object-cover" />
+                  <div>
+                    <h4 className="font-semibold">Lisa Thompson</h4>
+                    <p className="text-sm text-gray-500">Volunteer since 2024</p>
                   </div>
                 </div>
               </div>

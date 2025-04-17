@@ -108,6 +108,7 @@ const FetchDetailsProvider: React.FC<{children: React.ReactNode}> = ({ children 
 
       try {
         const response = await api.get('/users/get')
+        // delete response.data._id
         if (response.status === 200) dispatch(setUser(response.data))
       } catch (error) {
         console.error('error', error)

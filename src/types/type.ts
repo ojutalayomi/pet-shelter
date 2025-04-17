@@ -59,6 +59,7 @@ export interface PetProfile {
 }
 
 export interface User {
+  _id: string;
   id: string;
   avatar: string;
   firstName: string;

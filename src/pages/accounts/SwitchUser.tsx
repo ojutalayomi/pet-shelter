@@ -49,9 +49,9 @@ export default function SwitchUser() {
                     title: "Successfully switched user"
                 })
                 if(isDirectAccess('/accounts/switch-user')) {
-                    navigate(-1)
-                } else {
                     navigate('/')
+                } else {
+                    navigate(-1)
                 }
             } else {
                 toast({

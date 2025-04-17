@@ -19,6 +19,7 @@ import {
   ArrowLeftRight,
   WifiOff,
   LayoutDashboard,
+  Ban,
 } from "lucide-react"
 
 import {
@@ -99,12 +100,14 @@ import { toast } from "@/hooks/use-toast"
 
 
 const AppSidebar: React.FC<{children: React.ReactNode}> = ({children}) => {
+  const accessibleRef = useRef<boolean>(true)
   const navigate = useNavigate()
   const location = useLocation()
   const { open } = useSidebar()
   const { refetchPets, refetchUser, refetchApplications, isLoading, error } = useFetchDetails()
   const { isOnline, quality } = useNetwork()
   const user = useSelector((state: RootState) => state.user)
+  
   const fetchDetails = () => {
     if (error.user) refetchUser()
     if (error.pets) refetchPets()
@@ -115,13 +118,23 @@ const AppSidebar: React.FC<{children: React.ReactNode}> = ({children}) => {
   )
 
   useEffect(() => {
+    if(user.status === 'inactive' || user.status === 'suspended') accessibleRef.current = false
+    else accessibleRef.current = true
+  }, [user.status])
+
+  useEffect(() => {
     if (!isOnline) {
-      toast({
-        variant: 'destructive',
-        title: 'No Internet Connection',
-        description: 'Please check your connection and try again'
-      })
+      if (accessibleRef.current) {
+        toast({
+          variant: 'destructive',
+          title: 'No Internet Connection',
+          description: 'Please check your connection and try again'
+        })
+        accessibleRef.current = false
+      }
       return
+    } else {
+      if(user.status !== 'inactive' && user.status !== 'suspended') accessibleRef.current = true
     }
 
     if (quality === 'poor') {
@@ -131,7 +144,7 @@ const AppSidebar: React.FC<{children: React.ReactNode}> = ({children}) => {
         description: 'Search results may take longer to load'
       })
     }
-  }, [isOnline, quality])
+  }, [isOnline, quality, user.status])
 
   useEffect(() => {
     if (!error.user) {
@@ -556,16 +569,26 @@ const AppSidebar: React.FC<{children: React.ReactNode}> = ({children}) => {
           )}
 
           <div className="flex-1 rounded-xl bg-muted/50 md:min-h-min" >
-            {!isOnline && (
-              <div className="absolute inset-0 z-50 flex items-center justify-center bg-background/50">
+            {!accessibleRef.current && (
+              <div className="absolute inset-0 z-50 flex items-center justify-center bg-background/100">
                 <div className="text-center">
-                  <WifiOff className="mx-auto h-12 w-12 text-muted-foreground" />
-                  <h3 className="mt-2 text-lg font-semibold">You're Offline</h3>
-                  <p className="text-sm text-muted-foreground">Please check your internet connection</p>
+                  {!isOnline ? (
+                    <>
+                    <WifiOff className="mx-auto h-12 w-12 text-muted-foreground" />
+                    <h3 className="mt-2 text-lg font-semibold">You're Offline</h3>
+                    <p className="text-sm text-muted-foreground">Please check your internet connection</p>
+                    </>
+                  ) : (
+                    <>
+                      <Ban className="mx-auto h-12 w-12 text-muted-foreground" />
+                      <h3 className="mt-2 text-lg font-semibold">Your account is <span className="text-destructive">{user.status}</span></h3>
+                      <p className="text-sm text-muted-foreground">Please contact the administrator to activate your account</p>
+                    </>
+                  )}
                 </div>
               </div>
             )}
-            {children}
+            {accessibleRef.current && children}
           </div>
         </div>
       </SidebarInset>

@@ -1,18 +1,22 @@
 import { Button } from "@/components/ui/button"
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
+import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
 import { Label } from "@/components/ui/label"
 import { Input } from "@/components/ui/input"
 import { Textarea } from "@/components/ui/textarea"
-import { useState } from "react"
+import { useEffect, useRef, useState } from "react"
 import { Loader2 } from "lucide-react"
 import { useToast } from "@/hooks/use-toast"
 import { PetProfile } from "@/types/type"
 import { CommandDialogHome } from "@/components/command-dialog-home"
+import { api } from "@/providers/fetch-details"
+import { RootState } from "@/redux/store"
+import { useSelector } from "react-redux"
+import { Link } from "react-router-dom"
 
 interface EmergencyDetails {
-  petName: string
-  petData: object
+  petData: PetProfile
   ownerName: string
+  ownerId: string
   phone: string
   description: string
 }
@@ -20,21 +24,40 @@ interface EmergencyDetails {
 const EmergencyCare = () => {
   const [isLoading, setIsLoading] = useState(false)
   const { toast } = useToast()
+  const user = useSelector((state: RootState) => state.user)
+  const searchRef = useRef<HTMLButtonElement | null>(null)
   const [emergencyDetails, setEmergencyDetails] = useState<EmergencyDetails>({
-    petName: "",
-    petData: {},
+    petData: {} as PetProfile,
     ownerName: "",
+    ownerId: "",
     phone: "",
     description: ""
   })
 
+  useEffect(() => {
+    setEmergencyDetails(prev => ({
+      ...prev,
+      ownerName: `${user.firstName} ${user.lastName}`
+    }))
+  }, [user])
+
   const handleChange = (field: keyof EmergencyDetails) => (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
   ) => {
-    setEmergencyDetails(prev => ({
-      ...prev,
-      [field]: e.target.value
-    }))
+    if(field === "petData") {
+      setEmergencyDetails(prev => ({
+        ...prev,
+        petData: {
+          ...prev.petData,
+          name: e.target.value
+        }
+      }))
+    } else {
+      setEmergencyDetails(prev => ({
+        ...prev,
+        [field]: e.target.value
+      }))
+    }
   }
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -42,21 +65,23 @@ const EmergencyCare = () => {
     setIsLoading(true)
 
     try {
-      // Simulated API call
-      await new Promise(resolve => setTimeout(resolve, 1500))
+      console.log(emergencyDetails)
       
-      toast({
-        title: "Emergency Request Sent",
-        description: "We have received your emergency request and will contact you immediately.",
-      })
+      const response = await api.post('/pets/emergency-care', { ...emergencyDetails })
+      if(response.status === 200) {
+        toast({
+          title: "Emergency Request Sent",
+          description: "We have received your emergency request and will contact you immediately.",
+        })
 
-      setEmergencyDetails({
-        petName: "",
-        petData: {},
-        ownerName: "",
-        phone: "",
-        description: ""
-      })
+        setEmergencyDetails({
+          petData: {} as PetProfile,
+          ownerName: "",
+          ownerId: "",
+          phone: "",
+          description: ""
+        })
+      }
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     } catch (error: unknown) {
       toast({
@@ -72,14 +97,13 @@ const EmergencyCare = () => {
   const fillData = (pet: PetProfile) => {
     setEmergencyDetails(prev => ({
       ...prev,
-      petData: pet,
-      petName: pet.name
+      petData: pet
     }))
   }
 
   return (
-    <div className="max-w-4xl mx-auto p-6 space-y-8">
-      <Card className="border-destructive">
+    <div className="h-full p-1 space-y-8">
+      <Card className="border-destructive h-full">
         <CardHeader>
           <CardTitle className="text-destructive">Emergency Care Request</CardTitle>
           <p className="text-sm text-muted-foreground">
@@ -90,7 +114,7 @@ const EmergencyCare = () => {
           <form onSubmit={handleSubmit} className="space-y-6">
 
             <div className="space-y-2 flex justify-center">
-              <CommandDialogHome onSelect={fillData} />
+              <CommandDialogHome ref={searchRef} onSelect={fillData} />
             </div>
 
             <div className="grid gap-4 md:grid-cols-2">
@@ -100,8 +124,14 @@ const EmergencyCare = () => {
                 <Input
                   id="petName"
                   required
-                  value={emergencyDetails.petName}
-                  onChange={handleChange("petName")}
+                  value={emergencyDetails.petData.name}
+                  onChange={handleChange("petData")}
+                  onClick={() => {
+                    if (searchRef.current) {
+                      searchRef.current.focus()
+                      searchRef.current.click()
+                    }
+                  }}
                 />
               </div>
 
@@ -151,6 +181,13 @@ const EmergencyCare = () => {
             </Button>
           </form>
         </CardContent>
+        <CardFooter className="justify-center items-center">
+          <Link to="/emergency-care/requests">
+            <Button variant="link" className="w-full">
+              View Emergency Care Requests
+            </Button>
+          </Link>
+        </CardFooter>
       </Card>
     </div>
   )

@@ -1,5 +1,7 @@
 import { Suspense, lazy } from 'react'
-import { Routes, Route, useLocation } from 'react-router-dom'
+import { Routes, Route, useLocation, Navigate } from 'react-router-dom'
+import { useSelector } from 'react-redux'
+import { RootState } from '@/redux/store'
 import Error404Page from './404'
 import { ModalRoute } from './modal-route'
 // import { PetProfile } from '@/types/type'
@@ -18,9 +20,12 @@ const Invite = lazy(() => import ('@/pages/admin/Invite'))
 const Dashboard = lazy(() => import ('@/pages/admin/Dashboard'))
 const ManageUsers = lazy(() => import ('@/pages/admin/ManageUsers'))
 const ScheduledVisits = lazy(() => import('@/pages/admin/ScheduledVisits'))
+const EmergencyCareRequestsForAdmin = lazy(() => import ('@/pages/admin/EmergencyCareRequests'))
 
 const PetList = lazy(() => import ('@/pages/PetList'))
 const EmergencyCare = lazy(() => import ('@/pages/EmergencyCare'))
+const EmergencyCareRequests = lazy(() => import ('@/pages/EmergencyCareRequests'))
+
 const Settings = lazy(() => import ('@/pages/settings/Settings'))
 const Permissions = lazy(() => import ('@/pages/settings/Permissions'))
 const Notifications = lazy(() => import ('@/pages/settings/Notifications'))
@@ -41,6 +46,7 @@ const EditPet = lazy(() => import ('@/pages/EditPet'))
 const AddPet = lazy(() => import ('@/pages/AddPet'))
 
 function Main() {
+  const user = useSelector((state: RootState) => state.user)
   const location = useLocation()
   const state = location.state as { backgroundLocation?: Location }
   const backgroundLocation = state?.backgroundLocation
@@ -53,6 +59,8 @@ function Main() {
   return (
     <>
       <Routes location={backgroundLocation || location}>
+
+        <Route path='/error' element={<Error404Page />}/>
 
         {/* Accounts */}
 
@@ -78,31 +86,41 @@ function Main() {
         {/* Admin */}
 
         <Route path='/admin/*' element={
-          <Routes>
-            <Route path='dashboard' element={<Suspense fallback={<></>}><Dashboard /></Suspense>}/>
+          // Check if the user is an admin
+          user.role === 'admin' ? (
+            <Routes>
+              <Route path='dashboard' element={<Suspense fallback={<></>}><Dashboard /></Suspense>}/>
 
-            {isDirectAccess('/admin/invite') && (
-              <Route path="invite" element={
-                <Suspense fallback={<></>}>
-                  <Invite />
-                </Suspense>
-              } />
-            )}
+              {isDirectAccess('/admin/invite') && (
+                <Route path="invite" element={
+                  <Suspense fallback={<></>}>
+                    <Invite />
+                  </Suspense>
+                } />
+              )}
 
-            {isDirectAccess('/admin/applications') && (
-              <Route path="applications" element={
-                <Suspense fallback={<></>}>
-                  <Applications />
-                </Suspense>
-              } />
-            )}
+              {isDirectAccess('/admin/applications') && (
+                <Route path="applications" element={
+                  <Suspense fallback={<></>}>
+                    <Applications />
+                  </Suspense>
+                } />
+              )}
 
-            <Route path='pets/add' element={<Suspense fallback={<></>}><AddPet /></Suspense>}/>
+              <Route path='pets/add' element={<Suspense fallback={<></>}><AddPet /></Suspense>}/>
 
-            <Route path='users' element={<Suspense fallback={<></>}><ManageUsers /></Suspense>}/>
+              <Route path='users' element={<Suspense fallback={<></>}><ManageUsers /></Suspense>}/>
 
-            <Route path='visits' element={<Suspense fallback={<></>}><ScheduledVisits /></Suspense>}/>
-          </Routes>
+              <Route path='visits' element={<Suspense fallback={<></>}><ScheduledVisits /></Suspense>}/>
+
+              <Route path='emergency-care' element={<Suspense fallback={<></>}><EmergencyCareRequestsForAdmin /></Suspense>}/>
+
+              <Route path='*' element={<Error404Page />}/>
+            </Routes>
+          ) : (
+            // Redirect or show an error for non-admin users
+            <Navigate to="/error" /> // Adjust the path as needed
+          )
         }/>
 
         {/* Pet Detail */}
@@ -113,7 +131,12 @@ function Main() {
 
         <Route path='/schedule-visit' element={<Suspense fallback={<></>}><ScheduleVisit /></Suspense>}/>
 
-        <Route path='/emergency-care' element={<Suspense fallback={<></>}><EmergencyCare /></Suspense>}/>
+        <Route path='/emergency-care/*' element={
+          <Routes>
+            <Route path='' element={<Suspense fallback={<></>}><EmergencyCare /></Suspense>}/>
+            <Route path='requests' element={<Suspense fallback={<></>}><EmergencyCareRequests /></Suspense>}/>
+          </Routes>
+        }/>
 
         <Route path='/quick-actions' element={<Suspense fallback={<></>}><Menu /></Suspense>}/>
 
