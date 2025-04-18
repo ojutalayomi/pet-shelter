@@ -134,7 +134,7 @@ const AppSidebar: React.FC<{children: React.ReactNode}> = ({children}) => {
       }
       return
     } else {
-      if(user.status !== 'inactive' && user.status !== 'suspended') accessibleRef.current = true
+      accessibleRef.current = true
     }
 
     if (quality === 'poor') {
@@ -144,7 +144,7 @@ const AppSidebar: React.FC<{children: React.ReactNode}> = ({children}) => {
         description: 'Search results may take longer to load'
       })
     }
-  }, [isOnline, quality, user.status])
+  }, [isOnline, quality])
 
   useEffect(() => {
     if (!error.user) {
@@ -154,7 +154,7 @@ const AppSidebar: React.FC<{children: React.ReactNode}> = ({children}) => {
         avatar: user.avatar || '/avatars/default.jpg'
       }
     }
-  }, [error.user, user.avatar, user.email, user.firstName, user.lastName])
+  }, [error.user, user])
 
   return (
     <SidebarProvider>
@@ -569,7 +569,7 @@ const AppSidebar: React.FC<{children: React.ReactNode}> = ({children}) => {
           )}
 
           <div className="flex-1 rounded-xl bg-muted/50 md:min-h-min" >
-            {!accessibleRef.current && (
+            {!accessibleRef.current ? (
               <div className="absolute inset-0 z-50 flex items-center justify-center bg-background/100">
                 <div className="text-center">
                   {!isOnline ? (
@@ -587,8 +587,9 @@ const AppSidebar: React.FC<{children: React.ReactNode}> = ({children}) => {
                   )}
                 </div>
               </div>
+            ) : (
+              children
             )}
-            {accessibleRef.current && children}
           </div>
         </div>
       </SidebarInset>
