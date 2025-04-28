@@ -38,7 +38,7 @@ export default function ResetPassword() {
             }
 
             /* FETCH */
-            // const response = await fetch(`${import.meta.env.VITE_API_URL}/users/reset-password/${token}`, {
+            // const response = await fetch(`${import.meta.env.VITE_SERVER_URL}/users/reset-password/${token}`, {
             //     method: 'POST',
             //     headers: {
             //         'Content-Type': 'application/json'

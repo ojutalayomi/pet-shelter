@@ -96,7 +96,7 @@ const AddPet: React.FC = () => {
             }
 
             /* FETCH */
-            // const response = await fetch(import.meta.env.VITE_API_URL+'/pets/', {
+            // const response = await fetch(import.meta.env.VITE_SERVER_URL+'/pets/', {
             //     method: 'POST',
             //     headers: {
             //         'Content-Type': 'application/json'

@@ -108,7 +108,7 @@ const EditPet: React.FC = () => {
             }
 
             /* FETCH */
-            // const response = await fetch(`${import.meta.env.VITE_API_URL}/pets/${petToEdit.id}`, {
+            // const response = await fetch(`${import.meta.env.VITE_SERVER_URL}/pets/${petToEdit.id}`, {
             //     method: 'PUT',
             //     headers: {
             //         'Content-Type': 'application/json'

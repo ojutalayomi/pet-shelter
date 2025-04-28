@@ -27,7 +27,7 @@ function PetList({ filter }: { filter?: PetStatus }) {
     // const getPets = async () => {
     //     try {
     //         /* FETCH */
-    //         // const response = await fetch(import.meta.env.VITE_API_URL+'/pets')
+    //         // const response = await fetch(import.meta.env.VITE_SERVER_URL+'/pets')
     //         // const data = await response.json()
     //         // if (response.status === 200) setPets(data)
 

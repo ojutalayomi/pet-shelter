@@ -43,7 +43,7 @@ const PetDetail = () => {
     // const getPet = useCallback(async () => {
     //     try {
     //         /* FETCH */
-    //         // const response = await fetch(`${import.meta.env.VITE_API_URL}/pets/${petId}`)
+    //         // const response = await fetch(`${import.meta.env.VITE_SERVER_URL}/pets/${petId}`)
     //         // const data = await response.json()
     //         // if (response.status === 200) {
     //         //     setPet(data)
@@ -65,7 +65,7 @@ const PetDetail = () => {
     const deletePet_ = async () => {
         try {
             /* FETCH */
-            // const response = await fetch(`${import.meta.env.VITE_API_URL}/pets/${petId}`, {
+            // const response = await fetch(`${import.meta.env.VITE_SERVER_URL}/pets/${petId}`, {
             //     method: 'DELETE'
             // })
 

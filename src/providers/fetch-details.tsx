@@ -12,7 +12,7 @@ import { RootState } from '@/redux/store'
 import { User } from '@/types/type'
 
 // Determine the environment
-const isTesting = (window.location.protocol === 'https:' && import.meta.env.MODE === 'development') ? import.meta.env.VITE_SERVER_URL : import.meta.env.VITE_API_URL;
+const isTesting = (window.location.protocol === 'https:' && import.meta.env.VITE_ENV === 'development') ? import.meta.env.VITE_SERVER_URL : import.meta.env.VITE_SERVER_URL;
 
 // eslint-disable-next-line react-refresh/only-export-components
 export const api = axios.create({

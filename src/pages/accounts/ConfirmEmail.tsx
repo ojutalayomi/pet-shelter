@@ -96,7 +96,7 @@ export default function ConfirmEmail() {
             }
 
             /* FETCH */
-            // const response = await fetch(import.meta.env.VITE_API_URL+'/users/confirm-email', {
+            // const response = await fetch(import.meta.env.VITE_SERVER_URL+'/users/confirm-email', {
             //     method: 'POST',
             //     headers: {
             //         'Content-Type': 'application/json'

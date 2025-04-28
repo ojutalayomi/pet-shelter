@@ -43,7 +43,7 @@ export const CommandDialogHome = forwardRef<HTMLButtonElement, { onSelect?: (pet
           return
         }
           /* FETCH */
-          // const response = await fetch(import.meta.env.VITE_API_URL+'/pets/search?query='+search)
+          // const response = await fetch(import.meta.env.VITE_SERVER_URL+'/pets/search?query='+search)
 
           // if (response.status === 200) {
           //     const data = await response.json()

@@ -73,7 +73,7 @@ const AccountSettings: React.FC<AccountSettingsProps> = ({
             isLoading(true)
 
             /* FETCH */
-            // const response = await fetch(`${import.meta.env.VITE_API_URL}/users/${user.id}`, {
+            // const response = await fetch(`${import.meta.env.VITE_SERVER_URL}/users/${user.id}`, {
             //     method: 'PUT',
             //     headers: {
             //         'Content-Type': 'application/json'
